@@ -1,7 +1,8 @@
-package com.example.accountbook
+package com.example.accountbook.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.accountbook.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
