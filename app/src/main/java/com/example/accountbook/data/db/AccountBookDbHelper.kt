@@ -14,8 +14,14 @@ import com.example.accountbook.data.utils.AccountBookCategories
 import com.example.accountbook.data.utils.AccountBookContract
 import com.example.accountbook.data.utils.AccountBookHistories
 import com.example.accountbook.data.utils.AccountBookPayments
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AccountBookDbHelper(context: Context) : SQLiteOpenHelper(
+@Singleton
+class AccountBookDbHelper @Inject constructor(
+    @ApplicationContext context: Context
+) : SQLiteOpenHelper(
     context, AccountBookContract.DB_NAME, null, AccountBookContract.DB_VERSION
 ) {
 
