@@ -6,9 +6,12 @@ object AccountBookContract {
     const val DB_VERSION = 1
     const val SQL_DELETE_BASE_QUERY = "DROP TABLE IF EXISTS"
     const val SQL_ACTIVE_FOREIGN_KEY = "PRAGMA foreign_keys = 1"
+    const val ASC = "ASC"
+    const val DESC = "DESC"
 
     fun getDeleteAllSql(tableName: String) = "DELETE FROM $tableName"
     fun getSelectAllSql(tableName: String) = "SELECT * FROM $tableName"
+    fun getSelectAllSqlOrderBy(tableName: String, colName: String, order: String) = "SELECT * FROM $tableName ORDER BY $colName $order"
 
 }
 

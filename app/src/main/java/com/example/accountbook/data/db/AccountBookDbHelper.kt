@@ -14,7 +14,13 @@ import com.example.accountbook.data.utils.AccountBookCategories
 import com.example.accountbook.data.utils.AccountBookContract
 import com.example.accountbook.data.utils.AccountBookHistories
 import com.example.accountbook.data.utils.AccountBookPayments
+import com.example.accountbook.domain.model.HistoriesListItem
+import com.example.accountbook.domain.model.HistoriesTotalData
+import com.example.accountbook.domain.model.ViewType
+import com.example.accountbook.utils.dateToStringMdEEType
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,8 +36,6 @@ class AccountBookDbHelper @Inject constructor(
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        Log.d(TAG, "onCreate: ")
-
         db?.execSQL(AccountBookContract.SQL_ACTIVE_FOREIGN_KEY)
         db?.execSQL(AccountBookCategories.SQL_CREATE_TABLE)
         db?.execSQL(AccountBookPayments.SQL_CREATE_TABLE)
@@ -43,7 +47,6 @@ class AccountBookDbHelper @Inject constructor(
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        Log.d(TAG, "onUpgrade: ")
         if (oldVersion != newVersion) {
             db?.execSQL("${AccountBookContract.SQL_DELETE_BASE_QUERY} ${AccountBookCategories.TABLE_NAME}")
             db?.execSQL("${AccountBookContract.SQL_DELETE_BASE_QUERY} ${AccountBookHistories.TABLE_NAME}")
@@ -99,38 +102,136 @@ class AccountBookDbHelper @Inject constructor(
     //find function
     private fun getPaymentCount(payment: String): Int {
         readableDatabase.use { db ->
-            val cursor = db.rawQuery(AccountBookPayments.SQL_SELECT_BY_PAYMENT_QUERY, arrayOf(payment))
+            val cursor =
+                db.rawQuery(AccountBookPayments.SQL_SELECT_BY_PAYMENT_QUERY, arrayOf(payment))
             return cursor.use { c ->
-                c?.count?:0
+                c?.count ?: 0
             }
         }
     }
 
     private fun getCategoryCount(category: String): Int {
         readableDatabase.use { db ->
-            val cursor = db.rawQuery(AccountBookCategories.SQL_SELECT_BY_CATEGORY_QUERY, arrayOf(category))
+            val cursor =
+                db.rawQuery(AccountBookCategories.SQL_SELECT_BY_CATEGORY_QUERY, arrayOf(category))
             return cursor.use { c ->
-                c?.count?:0
+                c?.count ?: 0
             }
         }
     }
 
-    fun getAllHistories(): List<Histories> {
+//    fun getAllHistories(): List<Histories> {
+//        readableDatabase.use { db ->
+//            val cursor = db.rawQuery(AccountBookContract.getSelectAllSqlOrderBy(AccountBookHistories.TABLE_NAME, AccountBookHistories.COLUMN_NAME_DATE, AccountBookContract.DESC), null)
+//            return cursor.use { cursor ->
+//                generateSequence {
+//                    if (cursor.moveToNext()) cursor else null
+//                }.map {
+//                    getHistories(it)
+//                }.filterNotNull().toList()
+//            }
+//        }
+//    }
+//
+//    fun getAllHistoriesTotalData(): List<HistoriesListItem> {
+//        readableDatabase.use { db ->
+//            val cursor = db.rawQuery(AccountBookContract.getSelectAllSqlOrderBy(AccountBookHistories.TABLE_NAME, AccountBookHistories.COLUMN_NAME_DATE, AccountBookContract.DESC), null)
+//            return cursor.use { cursor ->
+//                generateSequence { if (cursor.moveToNext()) cursor else null }
+//                    .map { getHistoriesListItem(it) }
+//                    .filterNotNull()
+//                    .toList()
+//            }
+//        }
+//    }
+
+    fun getHistoriesTotalData(): HistoriesTotalData {
         readableDatabase.use { db ->
-            val cursor = db.rawQuery(AccountBookContract.getSelectAllSql(AccountBookHistories.TABLE_NAME), null)
-            return cursor.use { cursor ->
-                generateSequence {
-                    if (cursor.moveToNext()) cursor else null
-                }.map {
-                    getHistories(it)
-                }.filterNotNull().toList()
+            val cursor = db.rawQuery(
+                AccountBookContract.getSelectAllSqlOrderBy(
+                    AccountBookHistories.TABLE_NAME,
+                    AccountBookHistories.COLUMN_NAME_DATE,
+                    AccountBookContract.DESC
+                ), null
+            )
+            cursor.use { c ->
+                val groupByDateList = generateSequence { if (c.moveToNext()) c else null }
+                    .map { getHistoriesListItem(it) }
+                    .filterNotNull()
+                    .toList()
+                    .groupBy { dateToStringMdEEType(it.date!!) }
+                var totalIncoming = 0
+                var totalExpense = 0
+                val historyList = mutableListOf<HistoriesListItem>().apply {
+                    groupByDateList.keys.forEach { key ->
+                        val firstValue = groupByDateList[key]?.first()
+                        val valueSize = groupByDateList[key]?.size
+                        var dayIncoming = 0
+                        var dayExpense = 0
+                        val header = HistoriesListItem()
+                        firstValue?.let {
+                            add(
+                                header.apply {
+                                    date = it.date
+                                    viewType = ViewType.HEADER
+                                }
+                            )
+                            repeat(valueSize!!) { i ->
+                                groupByDateList[key]?.get(i)?.let { item ->
+                                    if (item.categories!!.isExpense == 1) dayExpense += item.price
+                                    else dayIncoming += item.price
+                                    add(item.apply {
+                                        viewType = ViewType.BODY
+                                    })
+                                }
+                            }
+                            header.dayIncoming = dayIncoming
+                            header.dayExpense = dayExpense
+                            totalIncoming += dayIncoming
+                            totalExpense += dayExpense
+                            groupByDateList[key]?.last()!!.isLastElement = true
+                        }
+                    }
+                }.toList()
+                return HistoriesTotalData(
+                    totalIncome = totalIncoming,
+                    totalExpense = totalExpense,
+                    historyList = historyList
+                )
             }
         }
+    }
+
+    @SuppressLint("Range")
+    fun getHistoriesListItem(cursor: Cursor): HistoriesListItem? = try {
+        cursor.run {
+            val id = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_ID))
+            val date = getLong(getColumnIndex(AccountBookHistories.COLUMN_NAME_DATE))
+            val price = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_PRICE))
+            val description =
+                getString(getColumnIndex(AccountBookHistories.COLUMN_NAME_DESCRIPTION))
+            val paymentId = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_PAYMENT_ID))
+            val categoryId = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_CATEGORY_ID))
+            HistoriesListItem(
+                id = id,
+                date = Date(date),
+                price = price,
+                description = description,
+                payments = getPaymentsById(paymentId) ?: Payments(0, ""),
+                categories = getCategoriesById(categoryId) ?: Categories(0, "", "", 0)
+            )
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
     }
 
     fun getAllCategories(): List<Categories> {
         readableDatabase.use { db ->
-            val cursor = db.rawQuery(AccountBookContract.getSelectAllSql(AccountBookCategories.TABLE_NAME), null)
+            val cursor = db.rawQuery(
+                AccountBookContract.getSelectAllSql(AccountBookCategories.TABLE_NAME),
+                null
+            )
             return cursor.use { c ->
                 generateSequence {
                     if (c.moveToNext()) c else null
@@ -143,7 +244,10 @@ class AccountBookDbHelper @Inject constructor(
 
     fun getAllPayments(): List<Payments> {
         readableDatabase.use { db ->
-            val cursor = db.rawQuery(AccountBookContract.getSelectAllSql(AccountBookPayments.TABLE_NAME), null)
+            val cursor = db.rawQuery(
+                AccountBookContract.getSelectAllSql(AccountBookPayments.TABLE_NAME),
+                null
+            )
             return cursor.use { c ->
                 generateSequence {
                     if (c.moveToNext()) c else null
@@ -161,7 +265,7 @@ class AccountBookDbHelper @Inject constructor(
             val payment = getString(getColumnIndex(AccountBookPayments.COLUMN_NAME_PAYMENT))
             Payments(paymentId = id, payment = payment)
         }
-    }catch (e: Exception){
+    } catch (e: Exception) {
         e.printStackTrace()
         null
     }
@@ -172,10 +276,16 @@ class AccountBookDbHelper @Inject constructor(
             val id = getInt(getColumnIndex(AccountBookCategories.COLUMN_NAME_ID))
             val category = getString(getColumnIndex(AccountBookCategories.COLUMN_NAME_CATEGORY))
             val isExpense = getInt(getColumnIndex(AccountBookCategories.COLUMN_NAME_IS_EXPENSE))
-            val labelColor = getString(getColumnIndex(AccountBookCategories.COLUMN_NAME_LABEL_COLOR))
-            Categories(categoryId = id, category = category, isExpense = isExpense, labelColor = labelColor)
+            val labelColor =
+                getString(getColumnIndex(AccountBookCategories.COLUMN_NAME_LABEL_COLOR))
+            Categories(
+                categoryId = id,
+                category = category,
+                isExpense = isExpense,
+                labelColor = labelColor
+            )
         }
-    }catch (e: Exception){
+    } catch (e: Exception) {
         e.printStackTrace()
         null
     }
@@ -186,7 +296,8 @@ class AccountBookDbHelper @Inject constructor(
             val id = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_ID))
             val date = getLong(getColumnIndex(AccountBookHistories.COLUMN_NAME_DATE))
             val price = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_PRICE))
-            val description = getString(getColumnIndex(AccountBookHistories.COLUMN_NAME_DESCRIPTION))
+            val description =
+                getString(getColumnIndex(AccountBookHistories.COLUMN_NAME_DESCRIPTION))
             val paymentId = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_PAYMENT_ID))
             val categoryId = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_CATEGORY_ID))
             Histories(
@@ -194,19 +305,20 @@ class AccountBookDbHelper @Inject constructor(
                 date = date,
                 price = price,
                 description = description,
-                payments = getPaymentsById(paymentId)?: Payments(0,""),
-                categories = getCategoriesById(categoryId)?: Categories(0,"","",0)
+                payments = getPaymentsById(paymentId) ?: Payments(0, ""),
+                categories = getCategoriesById(categoryId) ?: Categories(0, "", "", 0)
             )
         }
-    }catch (e: Exception){
+    } catch (e: Exception) {
         e.printStackTrace()
         null
     }
 
     @SuppressLint("Range")
-    fun getCategoriesById(id: Int): Categories? = try{
+    fun getCategoriesById(id: Int): Categories? = try {
         readableDatabase.use { db ->
-            val cursor = db.rawQuery(AccountBookCategories.SQL_SELECT_BY_ID_QUERY, arrayOf(id.toString()))
+            val cursor =
+                db.rawQuery(AccountBookCategories.SQL_SELECT_BY_ID_QUERY, arrayOf(id.toString()))
             cursor.run {
                 use {
                     moveToFirst()
@@ -219,7 +331,7 @@ class AccountBookDbHelper @Inject constructor(
                 }
             }
         }
-    }catch (e: Exception){
+    } catch (e: Exception) {
         e.printStackTrace()
         null
     }
@@ -227,7 +339,8 @@ class AccountBookDbHelper @Inject constructor(
     @SuppressLint("Range")
     fun getPaymentsById(id: Int): Payments? = try {
         readableDatabase.use { db ->
-            val cursor = db.rawQuery(AccountBookPayments.SQL_SELECT_BY_ID_QUERY, arrayOf(id.toString()))
+            val cursor =
+                db.rawQuery(AccountBookPayments.SQL_SELECT_BY_ID_QUERY, arrayOf(id.toString()))
             cursor.run {
                 use {
                     moveToFirst()
@@ -238,7 +351,7 @@ class AccountBookDbHelper @Inject constructor(
                 }
             }
         }
-    }catch (e: Exception){
+    } catch (e: Exception) {
         e.printStackTrace()
         null
     }
@@ -278,8 +391,8 @@ class AccountBookDbHelper @Inject constructor(
         }
     }
 
-    fun updateHistory(histories: Histories){
-        with(histories){
+    fun updateHistory(histories: Histories) {
+        with(histories) {
             writableDatabase.use { db ->
                 val values = ContentValues().apply {
                     put(AccountBookHistories.COLUMN_NAME_DATE, date)
