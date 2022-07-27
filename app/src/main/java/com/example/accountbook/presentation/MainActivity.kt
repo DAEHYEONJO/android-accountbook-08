@@ -3,6 +3,8 @@ package com.example.accountbook.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
+import com.example.accountbook.R
 import com.example.accountbook.databinding.ActivityMainBinding
 import com.example.accountbook.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,11 +17,23 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
 
+    private val binding: ActivityMainBinding by lazy {
+        DataBindingUtil.setContentView(
+            this@MainActivity,
+            R.layout.activity_main
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        initBinding()
 
+    }
+
+    private fun initBinding() {
+        with(binding){
+            lifecycleOwner = this@MainActivity
+            viewModel = mainViewModel
+        }
     }
 }
