@@ -7,4 +7,57 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--primary-->
+    <color name="primary_off_white_100">#F7F6F3</color>
+    <color name="primary_purple_100">#524D90</color>
+    <color name="primary_white_100">#FFFFFF</color>
+    <color name="primary_light_purple_100">#A79FCB</color>
+    <color name="primary_white_50">#80FFFFFF</color>
+    <color name="primary_purple_40">#66A69FCB</color>
+    <color name="primary_yellow_100">#F5B853</color>
+    <color name="primary_red_100">#E75B3F</color>
+
+    <!--secondary blue-->
+    <color name="secondary_blue1_100">#4A6CC3</color>
+    <color name="secondary_blue2_100">#2E86C7</color>
+    <color name="secondary_blue3_100">#4CA1DE</color>
+    <color name="secondary_blue4_100">#48C2E9</color>
+    <color name="secondary_blue5_100">#6ED5EB</color>
+
+    <!--secondary green-->
+    <color name="secondary_green1_100">#9FE7C8</color>
+    <color name="secondary_green2_100">#94D3CC</color>
+    <color name="secondary_green3_100">#4CB8B8</color>
+    <color name="secondary_green4_100">#40B98D</color>
+    <color name="secondary_green5_100">#2FA488</color>
+
+    <!--secondary purple-->
+    <color name="secondary_purple1_100">#625EBA</color>
+    <color name="secondary_purple2_100">#817DCE</color>
+    <color name="secondary_purple3_100">#9B7DCE</color>
+    <color name="secondary_purple4_100">#B391EB</color>
+    <color name="secondary_purple5_100">#D092E2</color>
+
+    <!--secondary pink-->
+    <color name="secondary_pink1_100">#F1B4EF</color>
+    <color name="secondary_pink2_100">#F4AEE1</color>
+    <color name="secondary_pink3_100">#F396B8</color>
+    <color name="secondary_pink4_100">#DC5D7B</color>
+    <color name="secondary_pink5_100">#CB588F</color>
+
+    <!--secondary olive-->
+    <color name="secondary_olive1_100">#9BD182</color>
+    <color name="secondary_olive2_100">#A3CB7A</color>
+    <color name="secondary_olive3_100">#B5CC7A</color>
+    <color name="secondary_olive4_100">#CCD67A</color>
+    <color name="secondary_olive5_100">#EAE07C</color>
+
+    <!--secondary yellow-->
+    <color name="secondary_yellow1_100">#EDCF65</color>
+    <color name="secondary_yellow2_100">#EBC374</color>
+    <color name="secondary_yellow3_100">#E1AD60</color>
+    <color name="secondary_yellow4_100">#E29C4D</color>
+    <color name="secondary_yellow5_100">#E39145</color>
+
 </resources>
