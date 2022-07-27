@@ -39,7 +39,7 @@ object AccountBookPayments {
     const val TABLE_NAME = "Payments"
     const val COLUMN_NAME_ID = "payment_id"
     const val COLUMN_NAME_PAYMENT = "payment"
-    const val SQL_CREATE_TABLE = "CREATE TABLE ${TABLE_NAME} (" +
+    const val SQL_CREATE_TABLE = "CREATE TABLE $TABLE_NAME (" +
             "$COLUMN_NAME_ID INTEGER NOT NULL," +
             "$COLUMN_NAME_PAYMENT TEXT NOT NULL," +
             "PRIMARY KEY($COLUMN_NAME_ID)" +
