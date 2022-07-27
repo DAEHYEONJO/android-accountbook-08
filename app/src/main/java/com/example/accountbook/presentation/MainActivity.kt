@@ -1,10 +1,14 @@
 package com.example.accountbook.presentation
 
+import android.database.sqlite.SQLiteOpenHelper
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import com.example.accountbook.R
+import com.example.accountbook.data.db.AccountBookDbHelper
+import com.example.accountbook.data.model.Payments
 import com.example.accountbook.databinding.ActivityMainBinding
 import com.example.accountbook.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
