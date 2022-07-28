@@ -37,8 +37,8 @@ class AccountBookDbHelper @Inject constructor(
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(AccountBookContract.SQL_ACTIVE_FOREIGN_KEY)
-        db?.execSQL(AccountBookCategories.SQL_CREATE_TABLE)
-        db?.execSQL(AccountBookPayments.SQL_CREATE_TABLE)
+        db?.execSQL(AccountBookCategories.SQL_CREATE_TABLE_CATEGORY_UNIQUE)
+        db?.execSQL(AccountBookPayments.SQL_CREATE_TABLE_PAYMENT_UNIQUE)
         db?.execSQL(AccountBookHistories.SQL_CREATE_TABLE)
         db?.execSQL(AccountBookCategories.SQL_CREATE_INDEX)
         db?.execSQL(AccountBookPayments.SQL_CREATE_INDEX)
@@ -47,6 +47,7 @@ class AccountBookDbHelper @Inject constructor(
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        Log.e(TAG, "onUpgrade: $oldVersion $newVersion")
         if (oldVersion != newVersion) {
             db?.execSQL("${AccountBookContract.SQL_DELETE_BASE_QUERY} ${AccountBookCategories.TABLE_NAME}")
             db?.execSQL("${AccountBookContract.SQL_DELETE_BASE_QUERY} ${AccountBookHistories.TABLE_NAME}")
@@ -56,30 +57,28 @@ class AccountBookDbHelper @Inject constructor(
     }
 
     //insert function test ok
-    fun insertPayment(payments: Payments) {
+    fun insertPayment(payments: Payments): Boolean {
         with(payments) {
-            if (getPaymentCount(payment) != 0) return
-
             writableDatabase.use { db ->
                 val contentValue = ContentValues().apply {
                     put(AccountBookPayments.COLUMN_NAME_PAYMENT, payment)
                 }
-                db.insert(AccountBookPayments.TABLE_NAME, null, contentValue)
+                val ret = db.insert(AccountBookPayments.TABLE_NAME, null, contentValue)
+                return ret > 0
             }
         }
     }
 
-    fun insertCategory(categories: Categories) {
+    fun insertCategory(categories: Categories): Boolean {
         with(categories) {
-            if (getCategoryCount(category) != 0) return
-
             writableDatabase.use { db ->
                 val values = ContentValues().apply {
                     put(AccountBookCategories.COLUMN_NAME_CATEGORY, category)
                     put(AccountBookCategories.COLUMN_NAME_IS_EXPENSE, isExpense)
                     put(AccountBookCategories.COLUMN_NAME_LABEL_COLOR, labelColor)
                 }
-                db.insert(AccountBookCategories.TABLE_NAME, null, values)
+                val ret = db.insert(AccountBookCategories.TABLE_NAME, null, values)
+                return ret > 0
             }
         }
     }
@@ -100,25 +99,25 @@ class AccountBookDbHelper @Inject constructor(
     }
 
     //find function
-    private fun getPaymentCount(payment: String): Int {
-        readableDatabase.use { db ->
-            val cursor =
-                db.rawQuery(AccountBookPayments.SQL_SELECT_BY_PAYMENT_QUERY, arrayOf(payment))
-            return cursor.use { c ->
-                c?.count ?: 0
-            }
-        }
-    }
+//    private fun getPaymentCount(payment: String): Int {
+//        readableDatabase.use { db ->
+//            val cursor =
+//                db.rawQuery(AccountBookPayments.SQL_SELECT_BY_PAYMENT_QUERY, arrayOf(payment))
+//            return cursor.use { c ->
+//                c?.count ?: 0
+//            }
+//        }
+//    }
 
-    private fun getCategoryCount(category: String): Int {
-        readableDatabase.use { db ->
-            val cursor =
-                db.rawQuery(AccountBookCategories.SQL_SELECT_BY_CATEGORY_QUERY, arrayOf(category))
-            return cursor.use { c ->
-                c?.count ?: 0
-            }
-        }
-    }
+//    private fun getCategoryCount(category: String): Int {
+//        readableDatabase.use { db ->
+//            val cursor =
+//                db.rawQuery(AccountBookCategories.SQL_SELECT_BY_CATEGORY_QUERY, arrayOf(category))
+//            return cursor.use { c ->
+//                c?.count ?: 0
+//            }
+//        }
+//    }
 
 //    fun getAllHistories(): List<Histories> {
 //        readableDatabase.use { db ->
