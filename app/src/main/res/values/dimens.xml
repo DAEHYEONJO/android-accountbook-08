@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="text_font_10">10sp</dimen>
+    <dimen name="text_font_12">12sp</dimen>
+    <dimen name="text_font_14">14sp</dimen>
+    <dimen name="text_font_16">16sp</dimen>
+    <dimen name="text_font_18">18sp</dimen>
+
+    <dimen name="app_base_space_16">16dp</dimen>
+    <dimen name="recycler_item_space_8">8dp</dimen>
+    <dimen name="recycler_item_space_24">24dp</dimen>
+
+    <dimen name="button_radius_14">14dp</dimen>
+    <dimen name="checkbox_radius_10">10dp</dimen>
+    <dimen name="checkbox_space_4">4dp</dimen>
+    <dimen name="checkbox_space_33">33dp</dimen>
+    <dimen name="checkbox_space_39">39dp</dimen>
+</resources>

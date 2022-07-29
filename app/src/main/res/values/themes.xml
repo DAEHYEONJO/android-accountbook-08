@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.AccountBook" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.AccountBook" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -10,7 +10,206 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/primary_off_white_100</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <!-- Appearacne Kopub White-->
+    <style name="Widget.TextView.KopubWorldDotumPro10_White100_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_white_100</item>
+        <item name="android:textSize">@dimen/text_font_10</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro12_White100_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_white_100</item>
+        <item name="android:textSize">@dimen/text_font_12</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro10_White100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_white_100</item>
+        <item name="android:textSize">@dimen/text_font_10</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro14_White100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_white_100</item>
+        <item name="android:textSize">@dimen/text_font_14</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
+    </style>
+
+    <!-- Appearacne Kopub Light Purple-->
+    <style name="Widget.TextView.KopubWorldDotumPro16_Light_Purple100_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_light_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_16</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_light_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_10</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
+    </style>
+
+    <!-- Appearacne Kopub Purple-->
+    <style name="Widget.TextView.KopubWorldDotumPro14_Purple100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_14</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro10_Purple100_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_10</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+
+    <style name="Widget.TextView.KopubWorldDotumPro18_Purple100_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_18</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+    <!-- Appearacne Kopub Red-->
+    <style name="Widget.TextView.KopubWorldDotumPro14_Red100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_red_100</item>
+        <item name="android:textSize">@dimen/text_font_14</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
+    </style>
+
+
+
+    <!-- Appearacne Kopub White_50-->
+    <style name="Widget.TextView.KopubWorldDotumPro10_White50_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_white_50</item>
+        <item name="android:textSize">@dimen/text_font_10</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+    <!-- Appearacne Kopub Income-->
+    <style name="Widget.TextView.KopubWorldDotumPro14_Income100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/income_color</item>
+        <item name="android:textSize">@dimen/text_font_14</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
+    </style>
+
+    <!-- Style BottomNavigationView -->
+    <style name="Widget.BottomNavigationView"
+        parent="Widget.Design.BottomNavigationView">
+        <item name="fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+    <!-- Style Kopub White -->
+    <style name="Widget.TextView.KopubWorldDotumPro10_White100_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro10_White100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro12_White100_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro12_White100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro10_White100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro10_White100_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro14_White100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro14_White100_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Style Kopub Purple -->
+    <style name="Widget.TextView.KopubWorldDotumPro14_Purple100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro14_Purple100_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro10_Purple100_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro10_Purple100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro18_Purple100_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro18_Purple100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Style Kopub Light Purple -->
+    <style name="Widget.TextView.KopubWorldDotumPro16_Light_Purple100_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro16_Light_Purple100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Style Kopub Red -->
+    <style name="Widget.TextView.KopubWorldDotumPro14_Red100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro14_Red100_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- Style Kopub Income -->
+    <style name="Widget.TextView.KopubWorldDotumPro14_Income100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro14_Income100_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+
+    <!-- BottomSheet Dialog-->
+    <style name="BottomSheetDialog_Rounded" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet_Rounded</item>
+    </style>
+
+    <style name="BottomSheet_Rounded" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="android:backgroundTint">@color/primary_off_white_100</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceBottomSheetDialog_Rounded</item>
+    </style>
+
+    <style name="ShapeAppearanceBottomSheetDialog_Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">@dimen/checkbox_radius_10</item>
+        <item name="cornerSizeTopLeft">@dimen/checkbox_radius_10</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+    <!-- Number Picker -->
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="android:textColorPrimary">@color/primary_purple_100</item>
+    </style>
+
+    <style name="ThemeOverlay.NumberPicker" parent="AppTheme.Picker">
+        <item name="colorControlNormal">@color/primary_purple_40</item>
+    </style>
+
 </resources>
