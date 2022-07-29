@@ -11,7 +11,14 @@ object AccountBookContract {
 
     fun getDeleteAllSql(tableName: String) = "DELETE FROM $tableName"
     fun getSelectAllSql(tableName: String) = "SELECT * FROM $tableName"
-    fun getSelectAllSqlOrderBy(tableName: String, colName: String, order: String) = "SELECT * FROM $tableName ORDER BY $colName $order"
+    fun getSelectAllSqlWhereOrderBy(
+        tableName: String,
+        colName: String,
+        order: String,
+        where: String,
+        start: Long,
+        end: Long
+    ) = "SELECT * FROM $tableName WHERE $where BETWEEN $start AND $end ORDER BY $colName $order"
 
 }
 
@@ -52,8 +59,10 @@ object AccountBookPayments {
             "$COLUMN_NAME_PAYMENT TEXT NOT NULL UNIQUE," +
             "PRIMARY KEY($COLUMN_NAME_ID)" +
             ");"
+
     //fun getPaymentCountSql(payment: String) = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_PAYMENT = $payment;"
-    const val SQL_SELECT_BY_PAYMENT_QUERY = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_PAYMENT = ?"
+    const val SQL_SELECT_BY_PAYMENT_QUERY =
+        "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_PAYMENT = ?"
     const val SQL_SELECT_BY_ID_QUERY = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_ID = ?"
     const val SQL_CREATE_INDEX = "CREATE INDEX payment_id_index ON $TABLE_NAME($COLUMN_NAME_ID);"
 }
@@ -78,7 +87,8 @@ object AccountBookCategories {
             "$COLUMN_NAME_IS_EXPENSE INTEGER NOT NULL, " +
             "PRIMARY KEY ($COLUMN_NAME_ID)" +
             ");"
-    const val SQL_SELECT_BY_CATEGORY_QUERY = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_CATEGORY = ?"
+    const val SQL_SELECT_BY_CATEGORY_QUERY =
+        "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_CATEGORY = ?"
     const val SQL_SELECT_BY_ID_QUERY = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_ID = ?"
     const val SQL_CREATE_INDEX = "CREATE INDEX category_id_index ON $TABLE_NAME($COLUMN_NAME_ID);"
 }

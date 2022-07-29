@@ -1,24 +1,8 @@
 package com.example.accountbook.utils
 
-import java.text.SimpleDateFormat
-import java.util.*
+import java.text.DecimalFormat
 
-fun dateToStringMdEEType(date: Date): String {
-    val pattern = "M월 d일 EE"
-    val formatter = SimpleDateFormat(pattern)
-    return formatter.format(date)
-}
-
-fun dateToYearMonth(date: Date): List<Int> {
-    val pattern = "yyyy MM"
-    val formatter = SimpleDateFormat(pattern)
-    return formatter.format(date)
-        .split(" ")
-        .map { it.toInt() }
-}
-
-fun dateToStringYYYYMdEEType(date: Date): String {
-    val pattern = "yyyy. M. d E요일"
-    val formatter = SimpleDateFormat(pattern)
-    return formatter.format(date)
+fun getCommaPriceString(price: Int): String{
+    val formatter = DecimalFormat("###,###")
+    return formatter.format(price)
 }

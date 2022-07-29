@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.accountbook.data.model.*
 import com.example.accountbook.data.model.Histories
 import com.example.accountbook.data.model.Payments
@@ -14,12 +15,9 @@ import com.example.accountbook.data.utils.AccountBookCategories
 import com.example.accountbook.data.utils.AccountBookContract
 import com.example.accountbook.data.utils.AccountBookHistories
 import com.example.accountbook.data.utils.AccountBookPayments
-import com.example.accountbook.domain.model.HistoriesListItem
-import com.example.accountbook.domain.model.HistoriesTotalData
-import com.example.accountbook.domain.model.ViewType
+import com.example.accountbook.domain.model.*
 import com.example.accountbook.utils.dateToStringMdEEType
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -98,107 +96,73 @@ class AccountBookDbHelper @Inject constructor(
         }
     }
 
-    //find function
-//    private fun getPaymentCount(payment: String): Int {
-//        readableDatabase.use { db ->
-//            val cursor =
-//                db.rawQuery(AccountBookPayments.SQL_SELECT_BY_PAYMENT_QUERY, arrayOf(payment))
-//            return cursor.use { c ->
-//                c?.count ?: 0
-//            }
-//        }
-//    }
-
-//    private fun getCategoryCount(category: String): Int {
-//        readableDatabase.use { db ->
-//            val cursor =
-//                db.rawQuery(AccountBookCategories.SQL_SELECT_BY_CATEGORY_QUERY, arrayOf(category))
-//            return cursor.use { c ->
-//                c?.count ?: 0
-//            }
-//        }
-//    }
-
-//    fun getAllHistories(): List<Histories> {
-//        readableDatabase.use { db ->
-//            val cursor = db.rawQuery(AccountBookContract.getSelectAllSqlOrderBy(AccountBookHistories.TABLE_NAME, AccountBookHistories.COLUMN_NAME_DATE, AccountBookContract.DESC), null)
-//            return cursor.use { cursor ->
-//                generateSequence {
-//                    if (cursor.moveToNext()) cursor else null
-//                }.map {
-//                    getHistories(it)
-//                }.filterNotNull().toList()
-//            }
-//        }
-//    }
-//
-//    fun getAllHistoriesTotalData(): List<HistoriesListItem> {
-//        readableDatabase.use { db ->
-//            val cursor = db.rawQuery(AccountBookContract.getSelectAllSqlOrderBy(AccountBookHistories.TABLE_NAME, AccountBookHistories.COLUMN_NAME_DATE, AccountBookContract.DESC), null)
-//            return cursor.use { cursor ->
-//                generateSequence { if (cursor.moveToNext()) cursor else null }
-//                    .map { getHistoriesListItem(it) }
-//                    .filterNotNull()
-//                    .toList()
-//            }
-//        }
-//    }
-
-    fun getHistoriesTotalData(): HistoriesTotalData {
+    private fun getHistoriesList(isExpense:Int, start: Long, end: Long): List<HistoriesListItem>{
+        // isExpense == 1 -> 지출
+        // isExpense == 0 -> 수입
+        // isExpense == -1 -> 지출 + 수입
         readableDatabase.use { db ->
             val cursor = db.rawQuery(
-                AccountBookContract.getSelectAllSqlOrderBy(
-                    AccountBookHistories.TABLE_NAME,
-                    AccountBookHistories.COLUMN_NAME_DATE,
-                    AccountBookContract.DESC
+                AccountBookContract.getSelectAllSqlWhereOrderBy(
+                    tableName = AccountBookHistories.TABLE_NAME,
+                    colName = AccountBookHistories.COLUMN_NAME_DATE,
+                    order = AccountBookContract.DESC,
+                    where = AccountBookHistories.COLUMN_NAME_DATE,
+                    start = start,
+                    end = end,
                 ), null
             )
             cursor.use { c ->
-                val groupByDateList = generateSequence { if (c.moveToNext()) c else null }
+                val filteredList = generateSequence { if (c.moveToNext()) c else null }
                     .map { getHistoriesListItem(it) }
                     .filterNotNull()
                     .toList()
-                    .groupBy { dateToStringMdEEType(it.date!!) }
-                var totalIncoming = 0
-                var totalExpense = 0
-                val historyList = mutableListOf<HistoriesListItem>().apply {
-                    groupByDateList.keys.forEach { key ->
-                        val firstValue = groupByDateList[key]?.first()
-                        val valueSize = groupByDateList[key]?.size
-                        var dayIncoming = 0
-                        var dayExpense = 0
-                        val header = HistoriesListItem()
-                        firstValue?.let {
-                            add(
-                                header.apply {
-                                    date = it.date
-                                    viewType = ViewType.HEADER
-                                }
-                            )
-                            repeat(valueSize!!) { i ->
-                                groupByDateList[key]?.get(i)?.let { item ->
-                                    if (item.categories!!.isExpense == 1) dayExpense += item.price
-                                    else dayIncoming += item.price
-                                    add(item.apply {
-                                        viewType = ViewType.BODY
-                                    })
-                                }
-                            }
-                            header.dayIncoming = dayIncoming
-                            header.dayExpense = dayExpense
-                            totalIncoming += dayIncoming
-                            totalExpense += dayExpense
-                            groupByDateList[key]?.last()!!.isLastElement = true
-                        }
-                    }
-                }.toList()
-                return HistoriesTotalData(
-                    totalIncome = totalIncoming,
-                    totalExpense = totalExpense,
-                    historyList = historyList
-                )
+                return when(isExpense){
+                    1 -> filteredList.filter { it.categories!!.isExpense==1 }
+                    0 -> filteredList.filter { it.categories!!.isExpense==0 }
+                    -1 -> filteredList
+                    else -> emptyList()
+                }
             }
         }
+    }
+
+    fun getHistoriesTotalData(isExpense: Int, start: Long, end: Long): HistoriesTotalData{
+        val historiesList = getHistoriesList(isExpense, start, end)
+        val groupByDateList = historiesList
+            .groupBy { dateToStringMdEEType(it.date!!) }
+        var totalIncoming = 0
+        var totalExpense = 0
+        val historyList = mutableListOf<HistoriesListItem>().apply {
+            groupByDateList.entries.forEach { (dateString, historyListItem) ->
+                val toBeHeaderItem = groupByDateList[dateString]?.first()
+                var dayIncoming = 0
+                var dayExpose = 0
+                val header = HistoriesListItem()
+                toBeHeaderItem?.let {
+                    add(header.apply {
+                        date = it.date
+                        viewType = HEADER
+                    })
+                }
+                historyListItem.forEach { history ->
+                    if (history.categories!!.isExpense == 1) dayExpose+= history.price
+                    else dayIncoming += history.price
+                    add(history.apply {
+                        viewType = BODY
+                    })
+                }
+                header.dayIncoming = dayIncoming
+                header.dayExpense = dayExpose
+                totalIncoming += dayIncoming
+                totalExpense += dayExpose
+                groupByDateList[dateString]?.last()?.isLastElement = true
+            }
+        }.toList()
+        return HistoriesTotalData(
+            totalIncome = totalIncoming,
+            totalExpense = totalExpense,
+            historyList = historyList
+        )
     }
 
     @SuppressLint("Range")

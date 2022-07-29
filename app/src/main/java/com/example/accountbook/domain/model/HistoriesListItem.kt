@@ -4,9 +4,8 @@ import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
 import java.util.*
 
-enum class ViewType {
-    HEADER, BODY
-}
+const val HEADER = 0
+const val BODY = 1
 
 data class HistoriesListItem(
     val id: Int = 0,
@@ -16,7 +15,7 @@ data class HistoriesListItem(
     val payments: Payments? = null,
     val categories: Categories? = null
 ){
-    var viewType: ViewType = ViewType.HEADER
+    var viewType: Int = BODY
     var isLastElement: Boolean = false
     var dayIncoming = 0
     var dayExpense = 0
