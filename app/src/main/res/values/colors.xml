@@ -61,5 +61,6 @@
     <color name="secondary_yellow5_100">#E39145</color>
 
     <color name="income_color">#4EAABA</color>
+    <color name="empty_list_color">#3F3F3F</color>
 
 </resources>

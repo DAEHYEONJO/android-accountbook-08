@@ -1,27 +1,18 @@
 package com.example.accountbook.presentation
 
-import android.database.sqlite.SQLiteOpenHelper
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.commit
 import com.example.accountbook.R
-import com.example.accountbook.data.db.AccountBookDbHelper
-import com.example.accountbook.data.model.Categories
-import com.example.accountbook.data.model.Histories
-import com.example.accountbook.data.model.Payments
 import com.example.accountbook.databinding.ActivityMainBinding
-import com.example.accountbook.presentation.adapter.HistoryAdapter
 import com.example.accountbook.presentation.viewmodel.MainViewModel
-import com.example.accountbook.utils.getStartEndOfCurMonth
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     companion object {
         const val TAG = "MainActivity"
     }
