@@ -14,5 +14,4 @@ abstract class AccountRepositoryModule {
     @Binds
     abstract fun bindAccountRepository(impl: AccountRepositoryImpl): AccountRepository
 
-
 }

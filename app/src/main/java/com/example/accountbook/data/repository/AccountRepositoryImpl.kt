@@ -18,9 +18,9 @@ class AccountRepositoryImpl @Inject constructor(
     private val dbHelper: AccountBookDbHelper,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : AccountRepository {
-    override suspend fun getHistoriesTotalData(): HistoriesTotalData {
+    override suspend fun getHistoriesTotalData(isExpense: Int, start: Long, end: Long): HistoriesTotalData {
         return withContext(dispatcher){
-            dbHelper.getHistoriesTotalData()
+            dbHelper.getHistoriesTotalData(isExpense, start, end)
         }
     }
 

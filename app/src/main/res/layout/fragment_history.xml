@@ -65,7 +65,7 @@
                     android:id="@+id/checkbox_history_income_price_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="000,000"
+                    app:setPriceText="@{viewModel.curMonthIncome}"
                     android:layout_marginStart="@dimen/checkbox_space_4"
                     app:layout_constraintTop_toTopOf="@+id/checkbox_history_income_hardcode_tv"
                     app:layout_constraintBottom_toBottomOf="@+id/checkbox_history_income_hardcode_tv"
@@ -113,7 +113,7 @@
                     android:id="@+id/checkbox_history_expense_price_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="000,000"
+                    app:setPriceText="@{viewModel.curMonthExpense}"
                     android:layout_marginStart="@dimen/checkbox_space_4"
                     app:layout_constraintTop_toTopOf="@+id/checkbox_history_expense_hardcode_tv"
                     app:layout_constraintBottom_toBottomOf="@+id/checkbox_history_expense_hardcode_tv"
@@ -123,11 +123,46 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/history_recycler_view"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        <FrameLayout
+            android:id="@+id/history_frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/history_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@+id/history_add_fab"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/history_add_fab"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="bottom|end"
+                app:layout_constraintTop_toBottomOf="@+id/history_recycler_view"
+                android:layout_marginTop="@dimen/app_base_space_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:borderWidth="0dp"
+                android:src="@drawable/ic_fab_add"
+                app:tint="@null"
+                android:outlineProvider="none"
+                android:backgroundTint="@color/primary_yellow_100"
+                android:layout_marginEnd="@dimen/app_base_space_16"
+                android:layout_marginBottom="@dimen/app_base_space_16"/>
+        </FrameLayout>
+
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+
+<!--           -->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
 
     </LinearLayout>
 </layout>

@@ -4,6 +4,7 @@
     <dimen name="text_font_10">10sp</dimen>
     <dimen name="text_font_12">12sp</dimen>
     <dimen name="text_font_14">14sp</dimen>
+    <dimen name="text_font_16">16sp</dimen>
     <dimen name="text_font_18">18sp</dimen>
 
     <dimen name="app_base_space_16">16dp</dimen>

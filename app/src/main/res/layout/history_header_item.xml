@@ -1,17 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="@dimen/recycler_item_space_24">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/history_header_date_tv"
-        android:layout_width="wrap_content"
+    <data>
+        <variable
+            name="historyListItem"
+            type="com.example.accountbook.domain.model.HistoriesListItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        android:paddingTop="@dimen/recycler_item_space_24">
+
+        <TextView
+            android:id="@+id/history_header_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/history_header_view"
+            android:layout_marginStart="@dimen/app_base_space_16"
+            android:layout_marginBottom="@dimen/recycler_item_space_8"
+            style="@style/Widget.TextView.KopubWorldDotumPro16_Light_Purple100_Medium.Style"
+            app:setDateMdEEType="@{historyListItem.date}" />
+
+        <TextView
+            android:id="@+id/history_header_income_hardcode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/history_header_income_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/history_header_income_tv"
+            app:layout_constraintEnd_toStartOf="@+id/history_header_income_tv"
+            android:layout_marginEnd="@dimen/recycler_item_space_8"
+            style="@style/Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.Style"
+            android:text="@string/checkbox_income_text" />
+
+        <TextView
+            android:id="@+id/history_header_income_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/history_header_expenst_hardcode_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/history_header_expenst_hardcode_tv"
+            app:layout_constraintEnd_toStartOf="@+id/history_header_expenst_hardcode_tv"
+            android:layout_marginEnd="@dimen/recycler_item_space_8"
+            style="@style/Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.Style"
+            app:setPriceText="@{historyListItem.dayIncoming}" />
+
+        <TextView
+            android:id="@+id/history_header_expenst_hardcode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/history_header_expense_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/history_header_expense_tv"
+            app:layout_constraintEnd_toStartOf="@+id/history_header_expense_tv"
+            android:layout_marginEnd="@dimen/recycler_item_space_8"
+            style="@style/Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.Style"
+            android:text="@string/checkbox_expense_text" />
+
+        <TextView
+            android:id="@+id/history_header_expense_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/history_header_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/app_base_space_16"
+            android:layout_marginBottom="@dimen/recycler_item_space_8"
+            style="@style/Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.Style"
+            app:setPriceText="@{historyListItem.dayExpense}" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:id="@+id/history_header_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/app_base_space_16"
+            android:layout_marginEnd="@dimen/app_base_space_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/primary_purple_40" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

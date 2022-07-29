@@ -9,23 +9,24 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.commit
 import com.example.accountbook.R
 import com.example.accountbook.data.db.AccountBookDbHelper
+import com.example.accountbook.data.model.Categories
+import com.example.accountbook.data.model.Histories
 import com.example.accountbook.data.model.Payments
 import com.example.accountbook.databinding.ActivityMainBinding
+import com.example.accountbook.presentation.adapter.HistoryAdapter
 import com.example.accountbook.presentation.viewmodel.MainViewModel
+import com.example.accountbook.utils.getStartEndOfCurMonth
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     companion object {
         const val TAG = "MainActivity"
-        const val HISTORY_TAG = "HistoryFragment"
-        const val CALENDAR_TAG = "CalendarFragment"
-        const val STATISTICS_TAG = "StatisticsFragment"
-        const val SETTING_TAG = "CalendarFragment"
     }
 
     private val mainViewModel: MainViewModel by viewModels()
-
     private val binding: ActivityMainBinding by lazy {
         DataBindingUtil.setContentView(
             this@MainActivity,
@@ -54,8 +55,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFragment(menuItemId: Int){
-        when (menuItemId){
+    private fun setFragment(menuItemId: Int) {
+        when (menuItemId) {
             R.id.bottom_nav_item_history -> supportFragmentManager.commit {
                 replace(R.id.main_fragment_container_view, HistoryFragment())
             }
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBinding() {
-        with(binding){
+        with(binding) {
             lifecycleOwner = this@MainActivity
             viewModel = mainViewModel
         }

@@ -6,7 +6,7 @@ import com.example.accountbook.domain.model.HistoriesTotalData
 
 interface AccountRepository {
 
-    suspend fun getHistoriesTotalData(): HistoriesTotalData
+    suspend fun getHistoriesTotalData(isExpense: Int, start: Long, end: Long): HistoriesTotalData
     suspend fun getAllCategories(): List<Categories>
     suspend fun getAllPayments(): List<Payments>
 
