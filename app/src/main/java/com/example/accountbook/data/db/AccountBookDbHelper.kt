@@ -7,12 +7,12 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.accountbook.data.model.*
 import com.example.accountbook.data.model.Histories
 import com.example.accountbook.data.model.Payments
 import com.example.accountbook.data.utils.AccountBookCategories
 import com.example.accountbook.data.utils.AccountBookContract
+import com.example.accountbook.data.utils.AccountBookContract.getSumPriceSqlWhere
 import com.example.accountbook.data.utils.AccountBookHistories
 import com.example.accountbook.data.utils.AccountBookPayments
 import com.example.accountbook.domain.model.*
@@ -57,7 +57,7 @@ class AccountBookDbHelper @Inject constructor(
     //insert function test ok
     fun insertPayment(payments: Payments): Boolean {
         with(payments) {
-            writableDatabase.use { db ->
+            readableDatabase.let { db ->
                 val contentValue = ContentValues().apply {
                     put(AccountBookPayments.COLUMN_NAME_PAYMENT, payment)
                 }
@@ -69,13 +69,13 @@ class AccountBookDbHelper @Inject constructor(
 
     fun insertCategory(categories: Categories): Boolean {
         with(categories) {
-            writableDatabase.use { db ->
+            with(readableDatabase) {
                 val values = ContentValues().apply {
                     put(AccountBookCategories.COLUMN_NAME_CATEGORY, category)
                     put(AccountBookCategories.COLUMN_NAME_IS_EXPENSE, isExpense)
                     put(AccountBookCategories.COLUMN_NAME_LABEL_COLOR, labelColor)
                 }
-                val ret = db.insert(AccountBookCategories.TABLE_NAME, null, values)
+                val ret = insert(AccountBookCategories.TABLE_NAME, null, values)
                 return ret > 0
             }
         }
@@ -83,7 +83,7 @@ class AccountBookDbHelper @Inject constructor(
 
     fun insertHistory(histories: Histories) {
         with(histories) {
-            writableDatabase.use { db ->
+            with(writableDatabase) {
                 val values = ContentValues().apply {
                     put(AccountBookHistories.COLUMN_NAME_DATE, date)
                     put(AccountBookHistories.COLUMN_NAME_PRICE, price)
@@ -91,17 +91,19 @@ class AccountBookDbHelper @Inject constructor(
                     put(AccountBookHistories.COLUMN_NAME_PAYMENT_ID, payments.paymentId)
                     put(AccountBookHistories.COLUMN_NAME_CATEGORY_ID, categories.categoryId)
                 }
-                db.insert(AccountBookHistories.TABLE_NAME, null, values)
+                insert(AccountBookHistories.TABLE_NAME, null, values)
             }
         }
     }
 
-    private fun getHistoriesList(isExpense:Int, start: Long, end: Long): List<HistoriesListItem>{
+    private fun getHistoriesList(isExpense: Int, start: Long, end: Long): List<HistoriesListItem> {
+        // isExpense == 3 -> 수입 + 지출
+        // isExpense == 2 -> 수입
         // isExpense == 1 -> 지출
-        // isExpense == 0 -> 수입
-        // isExpense == -1 -> 지출 + 수입
-        readableDatabase.use { db ->
-            val cursor = db.rawQuery(
+        // isExpense == 0 -> empty
+        if (isExpense == 0) return emptyList()
+        with(readableDatabase) {
+            val cursor = rawQuery(
                 AccountBookContract.getSelectAllSqlWhereOrderBy(
                     tableName = AccountBookHistories.TABLE_NAME,
                     colName = AccountBookHistories.COLUMN_NAME_DATE,
@@ -116,17 +118,17 @@ class AccountBookDbHelper @Inject constructor(
                     .map { getHistoriesListItem(it) }
                     .filterNotNull()
                     .toList()
-                return when(isExpense){
-                    1 -> filteredList.filter { it.categories!!.isExpense==1 }
-                    0 -> filteredList.filter { it.categories!!.isExpense==0 }
-                    -1 -> filteredList
+                return when (isExpense) {
+                    1 -> filteredList.filter { it.categories!!.isExpense == 1 }
+                    2 -> filteredList.filter { it.categories!!.isExpense == 0 }
+                    3 -> filteredList
                     else -> emptyList()
                 }
             }
         }
     }
 
-    fun getHistoriesTotalData(isExpense: Int, start: Long, end: Long): HistoriesTotalData{
+    fun getHistoriesTotalData(isExpense: Int, start: Long, end: Long): HistoriesTotalData {
         val historiesList = getHistoriesList(isExpense, start, end)
         val groupByDateList = historiesList
             .groupBy { dateToStringMdEEType(it.date!!) }
@@ -145,7 +147,7 @@ class AccountBookDbHelper @Inject constructor(
                     })
                 }
                 historyListItem.forEach { history ->
-                    if (history.categories!!.isExpense == 1) dayExpose+= history.price
+                    if (history.categories!!.isExpense == 1) dayExpose += history.price
                     else dayIncoming += history.price
                     add(history.apply {
                         viewType = BODY
@@ -190,8 +192,8 @@ class AccountBookDbHelper @Inject constructor(
     }
 
     fun getAllCategories(): List<Categories> {
-        readableDatabase.use { db ->
-            val cursor = db.rawQuery(
+        with(readableDatabase) {
+            val cursor = rawQuery(
                 AccountBookContract.getSelectAllSql(AccountBookCategories.TABLE_NAME),
                 null
             )
@@ -205,9 +207,22 @@ class AccountBookDbHelper @Inject constructor(
         }
     }
 
+    fun getSumPrice(isExpense: Int, start: Long, end: Long): Int {
+        with(readableDatabase) {
+            val cursor = rawQuery(
+                getSumPriceSqlWhere(isExpense, start, end),
+                null
+            )
+            return cursor.use { c ->
+                c.moveToFirst()
+                c.getInt(0)
+            }
+        }
+    }
+
     fun getAllPayments(): List<Payments> {
-        readableDatabase.use { db ->
-            val cursor = db.rawQuery(
+        with(readableDatabase) {
+            val cursor = rawQuery(
                 AccountBookContract.getSelectAllSql(AccountBookPayments.TABLE_NAME),
                 null
             )
@@ -279,9 +294,9 @@ class AccountBookDbHelper @Inject constructor(
 
     @SuppressLint("Range")
     fun getCategoriesById(id: Int): Categories? = try {
-        readableDatabase.use { db ->
+        with(readableDatabase) {
             val cursor =
-                db.rawQuery(AccountBookCategories.SQL_SELECT_BY_ID_QUERY, arrayOf(id.toString()))
+                rawQuery(AccountBookCategories.SQL_SELECT_BY_ID_QUERY, arrayOf(id.toString()))
             cursor.run {
                 use {
                     moveToFirst()
@@ -301,9 +316,9 @@ class AccountBookDbHelper @Inject constructor(
 
     @SuppressLint("Range")
     fun getPaymentsById(id: Int): Payments? = try {
-        readableDatabase.use { db ->
+        with(readableDatabase) {
             val cursor =
-                db.rawQuery(AccountBookPayments.SQL_SELECT_BY_ID_QUERY, arrayOf(id.toString()))
+                rawQuery(AccountBookPayments.SQL_SELECT_BY_ID_QUERY, arrayOf(id.toString()))
             cursor.run {
                 use {
                     moveToFirst()
@@ -322,11 +337,11 @@ class AccountBookDbHelper @Inject constructor(
     //update function -> test ok
     fun updatePayment(payments: Payments) {
         with(payments) {
-            writableDatabase.use { db ->
+            with(readableDatabase) {
                 val values = ContentValues().apply {
                     put(AccountBookPayments.COLUMN_NAME_PAYMENT, payment)
                 }
-                db.update(
+                update(
                     AccountBookPayments.TABLE_NAME,
                     values,
                     "${AccountBookPayments.COLUMN_NAME_ID} = ?",
@@ -339,12 +354,12 @@ class AccountBookDbHelper @Inject constructor(
     // test ok
     fun updateCategory(categories: Categories) {
         with(categories) {
-            writableDatabase.use { db ->
+            with(readableDatabase) {
                 val values = ContentValues().apply {
                     put(AccountBookCategories.COLUMN_NAME_CATEGORY, category)
                     put(AccountBookCategories.COLUMN_NAME_LABEL_COLOR, labelColor)
                 }
-                db.update(
+                update(
                     AccountBookCategories.TABLE_NAME,
                     values,
                     "${AccountBookCategories.COLUMN_NAME_ID} = ?",
@@ -356,7 +371,7 @@ class AccountBookDbHelper @Inject constructor(
 
     fun updateHistory(histories: Histories) {
         with(histories) {
-            writableDatabase.use { db ->
+            with(readableDatabase) {
                 val values = ContentValues().apply {
                     put(AccountBookHistories.COLUMN_NAME_DATE, date)
                     put(AccountBookHistories.COLUMN_NAME_PRICE, price)
@@ -364,7 +379,7 @@ class AccountBookDbHelper @Inject constructor(
                     put(AccountBookHistories.COLUMN_NAME_PAYMENT_ID, payments.paymentId)
                     put(AccountBookHistories.COLUMN_NAME_CATEGORY_ID, categories.categoryId)
                 }
-                db.update(
+                update(
                     AccountBookHistories.TABLE_NAME,
                     values,
                     "${AccountBookHistories.COLUMN_NAME_ID} = ?",
@@ -376,14 +391,14 @@ class AccountBookDbHelper @Inject constructor(
 
     //delete function
     fun deleteAll(tableName: String) {
-        writableDatabase.use { db ->
-            db.execSQL(AccountBookContract.getDeleteAllSql(tableName))
+        with(readableDatabase) {
+            execSQL(AccountBookContract.getDeleteAllSql(tableName))
         }
     }
 
     fun deleteHistory(id: Int) {
-        writableDatabase.use { db ->
-            db.delete(
+        with(readableDatabase) {
+            delete(
                 AccountBookHistories.TABLE_NAME,
                 "${AccountBookHistories.COLUMN_NAME_ID} = ?",
                 arrayOf(id.toString())

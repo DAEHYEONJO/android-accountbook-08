@@ -12,4 +12,5 @@ interface AccountRepository {
 
     suspend fun deleteAll(tableName: String)
 
+    suspend fun getSumPrice(isExpense: Int, start: Long, end: Long): Int
 }

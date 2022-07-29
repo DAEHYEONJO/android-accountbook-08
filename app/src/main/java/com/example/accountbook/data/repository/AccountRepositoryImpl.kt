@@ -42,5 +42,9 @@ class AccountRepositoryImpl @Inject constructor(
         }
     }
 
-
+    override suspend fun getSumPrice(isExpense: Int, start: Long, end: Long): Int {
+        return withContext(dispatcher){
+            dbHelper.getSumPrice(isExpense,start,end)
+        }
+    }
 }

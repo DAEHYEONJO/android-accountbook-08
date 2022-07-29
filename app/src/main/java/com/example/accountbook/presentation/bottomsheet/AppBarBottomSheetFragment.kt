@@ -57,6 +57,7 @@ class AppBarBottomSheetFragment : BottomSheetDialogFragment() {
                 with(mainViewModel){
                     curAppbarYear.value = bottomSheetYearPicker.value
                     curAppbarMonth.value = bottomSheetMonthPicker.value
+                    setTitle(bottomSheetYearPicker.value, bottomSheetMonthPicker.value)
                 }
                 dismiss()
             }

@@ -80,6 +80,12 @@
         <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
     </style>
 
+    <!-- Appearacne Kopub EmptyList-->
+    <style name="Widget.TextView.KopubWorldDotumPro12_EmptyList_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/empty_list_color</item>
+        <item name="android:textSize">@dimen/text_font_12</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
 
 
     <!-- Appearacne Kopub White_50-->
@@ -113,6 +119,13 @@
     <style name="Widget.TextView.KopubWorldDotumPro12_White100_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KopubWorldDotumPro12_White100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro12_EmptyList_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro12_EmptyList_Medium.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
