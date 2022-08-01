@@ -34,7 +34,7 @@
             app:layout_constraintEnd_toStartOf="@+id/history_header_income_tv"
             android:layout_marginEnd="@dimen/recycler_item_space_8"
             style="@style/Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.Style"
-            android:text="@string/checkbox_income_text" />
+            android:text="@string/income_text" />
 
         <TextView
             android:id="@+id/history_header_income_tv"
@@ -56,7 +56,7 @@
             app:layout_constraintEnd_toStartOf="@+id/history_header_expense_tv"
             android:layout_marginEnd="@dimen/recycler_item_space_8"
             style="@style/Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.Style"
-            android:text="@string/checkbox_expense_text" />
+            android:text="@string/expense_text" />
 
         <TextView
             android:id="@+id/history_header_expense_tv"

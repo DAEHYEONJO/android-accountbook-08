@@ -91,7 +91,8 @@ class AccountBookDbHelper @Inject constructor(
                     put(AccountBookHistories.COLUMN_NAME_PAYMENT_ID, payments.paymentId)
                     put(AccountBookHistories.COLUMN_NAME_CATEGORY_ID, categories.categoryId)
                 }
-                insert(AccountBookHistories.TABLE_NAME, null, values)
+                val ret = insert(AccountBookHistories.TABLE_NAME, null, values)
+                Log.e(TAG, "insertHistory: $ret", )
             }
         }
     }
@@ -132,13 +133,13 @@ class AccountBookDbHelper @Inject constructor(
         val historiesList = getHistoriesList(isExpense, start, end)
         val groupByDateList = historiesList
             .groupBy { dateToStringMdEEType(it.date!!) }
-        var totalIncoming = 0
-        var totalExpense = 0
+        var totalIncoming = 0L
+        var totalExpense = 0L
         val historyList = mutableListOf<HistoriesListItem>().apply {
             groupByDateList.entries.forEach { (dateString, historyListItem) ->
                 val toBeHeaderItem = groupByDateList[dateString]?.first()
-                var dayIncoming = 0
-                var dayExpose = 0
+                var dayIncoming = 0L
+                var dayExpose = 0L
                 val header = HistoriesListItem()
                 toBeHeaderItem?.let {
                     add(header.apply {
@@ -172,7 +173,7 @@ class AccountBookDbHelper @Inject constructor(
         cursor.run {
             val id = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_ID))
             val date = getLong(getColumnIndex(AccountBookHistories.COLUMN_NAME_DATE))
-            val price = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_PRICE))
+            val price = getLong(getColumnIndex(AccountBookHistories.COLUMN_NAME_PRICE))
             val description =
                 getString(getColumnIndex(AccountBookHistories.COLUMN_NAME_DESCRIPTION))
             val paymentId = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_PAYMENT_ID))
@@ -191,10 +192,10 @@ class AccountBookDbHelper @Inject constructor(
         null
     }
 
-    fun getAllCategories(): List<Categories> {
+    fun getAllCategories(isExpense: Int): List<Categories> {
         with(readableDatabase) {
             val cursor = rawQuery(
-                AccountBookContract.getSelectAllSql(AccountBookCategories.TABLE_NAME),
+                AccountBookCategories.getSelectSqlWhereIsExpense(isExpense),
                 null
             )
             return cursor.use { c ->
@@ -273,7 +274,7 @@ class AccountBookDbHelper @Inject constructor(
         cursor.run {
             val id = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_ID))
             val date = getLong(getColumnIndex(AccountBookHistories.COLUMN_NAME_DATE))
-            val price = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_PRICE))
+            val price = getLong(getColumnIndex(AccountBookHistories.COLUMN_NAME_PRICE))
             val description =
                 getString(getColumnIndex(AccountBookHistories.COLUMN_NAME_DESCRIPTION))
             val paymentId = getInt(getColumnIndex(AccountBookHistories.COLUMN_NAME_PAYMENT_ID))

@@ -90,6 +90,7 @@ object AccountBookCategories {
             "$COLUMN_NAME_IS_EXPENSE INTEGER NOT NULL, " +
             "PRIMARY KEY ($COLUMN_NAME_ID)" +
             ");"
+    fun getSelectSqlWhereIsExpense(isExpense: Int) = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_IS_EXPENSE = $isExpense"
     const val SQL_SELECT_BY_CATEGORY_QUERY =
         "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_CATEGORY = ?"
     const val SQL_SELECT_BY_ID_QUERY = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_ID = ?"
