@@ -3,8 +3,11 @@ package com.example.accountbook.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.accountbook.R
+import com.example.accountbook.data.model.Categories
+import com.example.accountbook.data.model.Payments
 import com.example.accountbook.domain.model.HistoriesTotalData
 import com.example.accountbook.domain.repository.AccountRepository
+import com.example.accountbook.utils.date
 import com.example.accountbook.utils.dateToYearMonth
 import com.example.accountbook.utils.getStartEndOfCurMonth
 import com.example.accountbook.utils.toInt
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -26,7 +30,6 @@ class MainViewModel @Inject constructor(
         const val TAG = "MainViewModel"
     }
 
-    private val date = Calendar.getInstance().time
     val curSelectedMenuItemId = MutableLiveData(R.id.bottom_nav_item_history)
 
     private val _historiesTotalData = MutableLiveData<HistoriesTotalData>()
@@ -64,32 +67,24 @@ class MainViewModel @Inject constructor(
         curAppbarTitle.value = "${year}년 ${month}월"
     }
 
-    val isExpenseLiveData = combine(historyIncomeChecked.asFlow(), historyExpenseChecked.asFlow()){
-        income, expense ->
-        // isExpenseLivaDate.value == 3 -> 수입 + 지출
-        // isExpenseLivaDate.value == 2 -> 수입
-        // isExpenseLivaDate.value == 1 ->       지출
-        // isExpenseLivaDate.value == 0 -> no    no
-        val incomeBit = income.toInt()
-        val expenseBit = expense.toInt()
-        (incomeBit shl 1) or expenseBit
-    }.shareIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        1
-    ).asLiveData()
+    val isExpenseLiveData =
+        combine(historyIncomeChecked.asFlow(), historyExpenseChecked.asFlow()) { income, expense ->
+            val incomeBit = income.toInt()
+            val expenseBit = expense.toInt()
+            (incomeBit shl 1) or expenseBit
+        }.asLiveData()
 
-    fun setTotalPrice(){
+    fun setTotalPrice() {
         val (start, end) = getStartEndOfCurMonth(
             curAppbarYear.value!!,
             curAppbarMonth.value!!
         )
-        with(viewModelScope){
+        with(viewModelScope) {
             launch {
-                curMonthIncome.value = repository.getSumPrice(0,start,end)
+                curMonthIncome.value = repository.getSumPrice(0, start, end)
             }
             launch {
-                curMonthExpense.value = repository.getSumPrice(1,start,end)
+                curMonthExpense.value = repository.getSumPrice(1, start, end)
             }
         }
     }

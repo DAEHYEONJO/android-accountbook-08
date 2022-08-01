@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".presentation.bottomsheet.DatePickerBottomSheetFragment">
+
+    <DatePicker
+        android:id="@+id/bottom_sheet_date_picker"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:theme="@style/AppTheme.DatePickerDialog" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bottom_sheet_date_picker_add_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_date_picker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/button_background_radius_14"
+        style="@style/Widget.TextView.KopubWorldDotumPro14_White100_Bold.Style"
+        android:layout_marginStart="@dimen/app_base_space_16"
+        android:layout_marginEnd="@dimen/app_base_space_16"
+        android:layout_marginBottom="@dimen/app_base_space_16"
+        android:stateListAnimator="@null"
+        android:text="@string/button_add"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,9 +8,19 @@
     <string name="app_bar_title">YYYY년 MM월</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="checkbox_income_text">수입</string>
-    <string name="checkbox_expense_text">지출</string>
+    <string name="income_text">수입</string>
+    <string name="expense_text">지출</string>
     <string name="bottom_sheet_select">선택하기</string>
     <string name="history_empty_list">내역이 없습니다.</string>
+    <string name="history_detail_app_bar_title">내역 등록</string>
+    <string name="button_add">등록하기</string>
+
+    <string name="history_detail_date">일자</string>
+    <string name="history_detail_price">금액</string>
+    <string name="history_detail_payment">결제 수단</string>
+    <string name="history_detail_category">분류</string>
+    <string name="history_detail_description">내용</string>
+    <string name="edit_text_hint_input">입력하세요</string>
+    <string name="edit_text_hint_choose">선택하세요</string>
 
 </resources>

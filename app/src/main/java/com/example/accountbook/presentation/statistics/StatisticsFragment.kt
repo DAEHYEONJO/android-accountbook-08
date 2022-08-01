@@ -1,4 +1,4 @@
-package com.example.accountbook.presentation
+package com.example.accountbook.presentation.statistics
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

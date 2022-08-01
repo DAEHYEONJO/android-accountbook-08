@@ -1,4 +1,4 @@
-package com.example.accountbook.presentation
+package com.example.accountbook.presentation.history
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +17,7 @@ import com.example.accountbook.databinding.FragmentHistoryBinding
 import com.example.accountbook.presentation.adapter.HistoryAdapter
 import com.example.accountbook.presentation.base.BaseFragment
 import com.example.accountbook.presentation.bottomsheet.AppBarBottomSheetFragment
+import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
 import com.example.accountbook.presentation.viewmodel.MainViewModel
 import com.example.accountbook.utils.getStartEndOfCurMonth
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +31,7 @@ class HistoryFragment :
     BaseFragment<FragmentHistoryBinding>(R.layout.fragment_history, "HistoryFragment") {
 
     private val mainViewModel: MainViewModel by activityViewModels()
+    private val historyDetailViewModel: HistoryDetailViewModel by activityViewModels ()
 
     @Inject
     lateinit var historyAdapter: HistoryAdapter
@@ -36,9 +39,37 @@ class HistoryFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = mainViewModel
+        initAppbar()
         initLayout()
         initRecyclerView()
         initObserver()
+        initFab()
+    }
+
+    private fun initAppbar() {
+        with(binding.historyAppBarLayout) {
+            appBarBackIv.setOnClickListener {
+                mainViewModel.onClickPreMonthBtn()
+            }
+            appBarRightIv.setOnClickListener {
+                mainViewModel.onClickNextMonthBtn()
+            }
+        }
+    }
+
+    private fun initFab() {
+        binding.historyAddFab.setOnClickListener {
+            parentFragmentManager.commit {
+                addToBackStack("HistoryFragment")
+                var fragment = parentFragmentManager.findFragmentByTag(HistoryDetailFragment::class.simpleName)
+                fragment = if (fragment == null){
+                    HistoryDetailFragment()
+                }else{
+                    fragment as HistoryDetailFragment
+                }
+                replace(R.id.main_fragment_container_view, fragment, HistoryDetailFragment::class.simpleName)
+            }
+        }
     }
 
     private fun initLayout() {
@@ -65,15 +96,16 @@ class HistoryFragment :
     private fun initObserver() {
         with(mainViewModel) {
             isExpenseLiveData.observe(viewLifecycleOwner) { isExpense ->
-                Log.e(TAG, "isExpenseLiveData: ", )
+                Log.e(TAG, "isExpenseLiveData: ")
                 mainViewModel.getHistoriesTotalData(isExpense)
             }
             historiesTotalData.observe(viewLifecycleOwner) {
-                Log.e(TAG, "historiesTotalData: ${it.historyList}", )
+                Log.e(TAG, "historiesTotalData: ${it.historyList}")
                 historyAdapter.submitList(it.historyList)
             }
             curAppbarTitle.observe(viewLifecycleOwner) {
-                Log.e(TAG, "curAppbarTitle: $it ${curAppbarYear.value} ${curAppbarMonth.value}", )
+                Log.e(TAG, "curAppbarTitle: $it ${curAppbarYear.value} ${curAppbarMonth.value}")
+                binding.historyAppBarLayout.appBarTitleTv.text = it
                 setTotalPrice()
                 getHistoriesTotalData(isExpenseLiveData.value!!)
             }
