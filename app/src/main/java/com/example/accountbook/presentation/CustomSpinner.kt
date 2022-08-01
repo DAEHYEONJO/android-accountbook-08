@@ -31,9 +31,7 @@ class CustomSpinner : AppCompatSpinner {
 
     override fun performClick(): Boolean {
         openInitiated = true
-        if (onSpinnerEventsListener != null) {
-            onSpinnerEventsListener!!.onPopupWindowOpened(this)
-        }
+        onSpinnerEventsListener?.onPopupWindowOpened(this)
         return super.performClick()
     }
 
@@ -45,8 +43,6 @@ class CustomSpinner : AppCompatSpinner {
 
     private fun performClosedEvent() {
         openInitiated = false
-        if (onSpinnerEventsListener != null) {
-            onSpinnerEventsListener!!.onPopupWindowClosed(this)
-        }
+        onSpinnerEventsListener?.onPopupWindowClosed(this)
     }
 }
