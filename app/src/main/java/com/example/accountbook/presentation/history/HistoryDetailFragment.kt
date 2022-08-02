@@ -2,7 +2,6 @@ package com.example.accountbook.presentation.history
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
@@ -17,7 +16,6 @@ import com.example.accountbook.presentation.CustomSpinner
 import com.example.accountbook.presentation.adapter.CategorySpinnerAdapter
 import com.example.accountbook.presentation.adapter.PaymentSpinnerAdapter
 import com.example.accountbook.presentation.base.BaseFragment
-import com.example.accountbook.presentation.bottomsheet.AppBarBottomSheetFragment
 import com.example.accountbook.presentation.bottomsheet.DatePickerBottomSheetFragment
 import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
 import com.example.accountbook.presentation.viewmodel.MainViewModel
@@ -83,26 +81,13 @@ class HistoryDetailFragment
     private fun initRadioGroup() {
         with(binding) {
             this.viewModel = historyDetailViewModel
-            val checkedValue = if (historyDetailViewModel.isExpenseChecked.value == null) {
-                mainViewModel.isExpenseLiveData.value!!
-            } else {
-                historyDetailViewModel.isExpenseChecked.value!!.toInt()
-            }
-
-            if (checkedValue == 1) {
-                historyDetailExpenseBtn.isChecked = true
-            } else {
-                historyDetailIncomeBtn.isChecked = true
-            }
-            historyDetailViewModel.isExpenseChecked.value = historyDetailExpenseBtn.isChecked
+            if (historyDetailViewModel.isUpdateMode.value == true) return@with
+            historyDetailViewModel.isExpenseChecked.value = mainViewModel.isExpenseLiveData.value!! == 1
         }
     }
 
     private fun fetchList() {
-        with(historyDetailViewModel) {
-            setPaymentsList()
-            setCategoryList(historyDetailViewModel.isExpenseChecked.value!!.toInt())
-        }
+        historyDetailViewModel.fetchData()
     }
 
     private fun initObserver() {
@@ -114,15 +99,24 @@ class HistoryDetailFragment
                 paymentSpinnerAdapter.paymentList = it
                 paymentSpinnerAdapter.notifyDataSetChanged()
             }
-            spinnerCategoryList.observe(viewLifecycleOwner) {
-                it.forEach {
-                    Log.e(TAG, "spinnerCategoryList: $it")
+            spinnerExpenseCategoryList.observe(viewLifecycleOwner) {
+                if (isExpenseChecked.value!!){
+                    categorySpinnerAdapter.categoryList = it
+                    categorySpinnerAdapter.notifyDataSetChanged()
                 }
-                categorySpinnerAdapter.categoryList = it
-                categorySpinnerAdapter.notifyDataSetChanged()
             }
-            isButtonEnabled.observe(viewLifecycleOwner) {
-                Log.d(TAG, "initObserver: isButtonEnabled $it")
+            spinnerIncomeCategoryList.observe(viewLifecycleOwner) {
+                if (!isExpenseChecked.value!!) {
+                    categorySpinnerAdapter.categoryList = it
+                    categorySpinnerAdapter.notifyDataSetChanged()
+                }
+            }
+            isExpenseChecked.observe(viewLifecycleOwner){
+                categorySpinnerAdapter.categoryList = if (it){
+                    spinnerExpenseCategoryList.value!!
+                }else{
+                    spinnerIncomeCategoryList.value!!
+                }
             }
         }
     }
@@ -149,7 +143,6 @@ class HistoryDetailFragment
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
-                    Log.d(TAG, "category onNothingSelected: $p0")
                 }
             }
         }
@@ -198,36 +191,32 @@ class HistoryDetailFragment
     private fun initBtn() {
         with(binding) {
             historyDetailAddBtn.setOnClickListener {
-                Log.e(TAG, "initBtn: ${historyDetailPriceEt.text.toString().replace(",", "").toLong()}", )
-                Log.e(TAG, "initBtn: ${historyDetailDescriptionEt.text.let {
+                val price = historyDetailPriceEt.text.toString().replace(",", "").toLong()
+                val description = historyDetailDescriptionEt.text.let {
                     if (it.isNotEmpty()) {
                         it.toString()
                     } else {
                         ""
                     }
-                }}", )
-                Log.e(TAG, "initBtn: ${if (historyDetailViewModel.isExpenseChecked.value!!) {
+                }
+                val categories = if (historyDetailViewModel.isExpenseChecked.value!!) {
                     historyDetailViewModel.selectedExpenseCategory.value!!
                 } else {
                     historyDetailViewModel.selectedIncomeCategory.value!!
-                }}", )
-                Log.e(TAG, "initBtn: ${historyDetailViewModel.selectedPayments.value!!}", )
-                historyDetailViewModel.insertHistory(
-                    price = historyDetailPriceEt.text.toString().replace(",", "").toLong(),
-                    description = historyDetailDescriptionEt.text.let {
-                        if (it.isNotEmpty()) {
-                            it.toString()
-                        } else {
-                            ""
-                        }
-                    },
-                    categories = if (historyDetailViewModel.isExpenseChecked.value!!) {
-                        historyDetailViewModel.selectedExpenseCategory.value!!
-                    } else {
-                        historyDetailViewModel.selectedIncomeCategory.value!!
-                    },
-                    payments = historyDetailViewModel.selectedPayments.value!!
-                )
+                }
+                val payments = historyDetailViewModel.selectedPayments.value?: Payments()
+                Log.d(TAG, "initBtn: values ${historyDetailViewModel.updateHistoryId.value}")
+                Log.d(TAG, "initBtn: values $price")
+                Log.d(TAG, "initBtn: values $description")
+                Log.d(TAG, "initBtn: values $categories")
+                Log.d(TAG, "initBtn: values $payments")
+                with(historyDetailViewModel){
+                    if (isUpdateMode.value!!){
+                        updateHistory(price, description, payments, categories)
+                    }else{
+                        insertHistory(price, description, payments, categories)
+                    }
+                }
                 parentFragmentManager.popBackStack()
             }
         }
@@ -266,6 +255,11 @@ class HistoryDetailFragment
                 parentFragmentManager.popBackStack()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        historyDetailViewModel.resetMemberProperties()
     }
 
 }

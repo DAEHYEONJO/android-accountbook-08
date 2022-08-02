@@ -10,6 +10,7 @@ import com.example.accountbook.R
 import com.example.accountbook.data.db.AccountBookDbHelper
 import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
+import com.example.accountbook.data.utils.AccountBookHistories
 import com.example.accountbook.databinding.ActivityMainBinding
 import com.example.accountbook.presentation.calendar.CalendarFragment
 import com.example.accountbook.presentation.history.HistoryFragment
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.viewModel = mainViewModel
+        historyDetailViewModel.fetchData()
         initBinding()
         initBottomNavigation()
     }

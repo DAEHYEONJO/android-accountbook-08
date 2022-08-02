@@ -59,8 +59,13 @@ class AccountRepositoryImpl @Inject constructor(
 
     override suspend fun insertHistory(historiesListItem: HistoriesListItem) {
         withContext(dispatcher){
-            Log.e(TAG, "AccountRepositoryImpl insertHistory: $historiesListItem", )
             dbHelper.insertHistory(mapper.getHistories(historiesListItem))
+        }
+    }
+
+    override suspend fun updateHistory(historiesListItem: HistoriesListItem) {
+        withContext(dispatcher){
+            dbHelper.updateHistory(mapper.getHistories(historiesListItem))
         }
     }
 }

@@ -14,11 +14,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.accountbook.R
 import com.example.accountbook.databinding.FragmentHistoryBinding
+import com.example.accountbook.domain.model.HEADER
+import com.example.accountbook.domain.model.HistoriesListItem
 import com.example.accountbook.presentation.adapter.HistoryAdapter
 import com.example.accountbook.presentation.base.BaseFragment
 import com.example.accountbook.presentation.bottomsheet.AppBarBottomSheetFragment
 import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
 import com.example.accountbook.presentation.viewmodel.MainViewModel
+import com.example.accountbook.utils.dateToYearMonthDay
 import com.example.accountbook.utils.getStartEndOfCurMonth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -33,8 +36,7 @@ class HistoryFragment :
     private val mainViewModel: MainViewModel by activityViewModels()
     private val historyDetailViewModel: HistoryDetailViewModel by activityViewModels ()
 
-    @Inject
-    lateinit var historyAdapter: HistoryAdapter
+    @Inject lateinit var historyAdapter: HistoryAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,16 +61,20 @@ class HistoryFragment :
 
     private fun initFab() {
         binding.historyAddFab.setOnClickListener {
-            parentFragmentManager.commit {
-                addToBackStack("HistoryFragment")
-                var fragment = parentFragmentManager.findFragmentByTag(HistoryDetailFragment::class.simpleName)
-                fragment = if (fragment == null){
-                    HistoryDetailFragment()
-                }else{
-                    fragment as HistoryDetailFragment
-                }
-                replace(R.id.main_fragment_container_view, fragment, HistoryDetailFragment::class.simpleName)
+            fragmentTransaction()
+        }
+    }
+
+    private fun fragmentTransaction(){
+        parentFragmentManager.commit {
+            addToBackStack("HistoryFragment")
+            var fragment = parentFragmentManager.findFragmentByTag(HistoryDetailFragment::class.simpleName)
+            fragment = if (fragment == null){
+                HistoryDetailFragment()
+            }else{
+                fragment as HistoryDetailFragment
             }
+            replace(R.id.main_fragment_container_view, fragment, HistoryDetailFragment::class.simpleName)
         }
     }
 
@@ -89,7 +95,16 @@ class HistoryFragment :
             if (animator is SimpleItemAnimator) {
                 animator.supportsChangeAnimations = false
             }
-            adapter = historyAdapter
+            adapter = historyAdapter.apply {
+                onBodyItemClickListener = object : HistoryAdapter.OnBodyItemClickListener{
+                    override fun onBodyItemClick(historyListItem: HistoriesListItem) {
+                        fragmentTransaction()
+                        Log.e(TAG, "onBodyItemClick: $historyListItem", )
+                        historyDetailViewModel.setMemberProperties(historyListItem)
+                        historyDetailViewModel.isUpdateMode.value = true
+                    }
+                }
+            }
         }
     }
 
@@ -99,8 +114,10 @@ class HistoryFragment :
                 Log.e(TAG, "isExpenseLiveData: ")
                 mainViewModel.getHistoriesTotalData(isExpense)
             }
-            historiesTotalData.observe(viewLifecycleOwner) {
-                Log.e(TAG, "historiesTotalData: ${it.historyList}")
+            historiesTotalData.observe(viewLifecycleOwner) { it ->
+                it.historyList.forEach {
+                    if (it.viewType!= HEADER) Log.e(TAG, "historyData: $it", )
+                }
                 historyAdapter.submitList(it.historyList)
             }
             curAppbarTitle.observe(viewLifecycleOwner) {

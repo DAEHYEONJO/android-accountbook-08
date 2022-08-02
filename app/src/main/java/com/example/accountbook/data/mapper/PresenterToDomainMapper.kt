@@ -13,6 +13,7 @@ class PresenterToDomainMapper @Inject constructor() {
     fun getHistories(historiesListItem: HistoriesListItem): Histories{
         return historiesListItem.run {
             Histories(
+                id = this.id,
                 date = this.date!!.time,
                 price = this.price,
                 description = this.description,
