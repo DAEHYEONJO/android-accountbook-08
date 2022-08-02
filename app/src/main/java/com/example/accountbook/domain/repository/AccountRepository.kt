@@ -15,4 +15,5 @@ interface AccountRepository {
     suspend fun getSumPrice(isExpense: Int, start: Long, end: Long): Int
     suspend fun insertHistory(historiesListItem: HistoriesListItem)
     suspend fun updateHistory(historiesListItem: HistoriesListItem)
+    suspend fun deleteHistory(id: Int)
 }

@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="white_50">#80FFFFFF</color>
+    <color name="nothing">#00FFFFFF</color>
 
     <!--primary-->
     <color name="primary_off_white_100">#F7F6F3</color>
@@ -17,6 +18,7 @@
     <color name="primary_light_purple_100">#A79FCB</color>
     <color name="primary_white_50">#80FFFFFF</color>
     <color name="primary_purple_40">#66A69FCB</color>
+    <color name="primary_purple_30">#4D524D90</color>
     <color name="primary_yellow_100">#F5B853</color>
     <color name="primary_red_100">#E75B3F</color>
 

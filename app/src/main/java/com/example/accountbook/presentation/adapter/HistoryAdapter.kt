@@ -18,7 +18,8 @@ class HistoryAdapter @Inject constructor()
     : ListAdapter<HistoriesListItem, RecyclerView.ViewHolder>(diffUtil) {
 
     interface OnBodyItemClickListener{
-        fun onBodyItemClick(historyListItem: HistoriesListItem)
+        fun onBodyItemClick(position: Int, historyListItem: HistoriesListItem)
+        fun onBodyLongClick(position: Int, historyListItem: HistoriesListItem)
     }
     var onBodyItemClickListener: OnBodyItemClickListener? = null
 
@@ -52,7 +53,11 @@ class HistoryAdapter @Inject constructor()
 
         init {
             binding.root.setOnClickListener {
-                onBodyItemClickListener?.onBodyItemClick(currentList[adapterPosition])
+                onBodyItemClickListener?.onBodyItemClick(adapterPosition, currentList[adapterPosition])
+            }
+            binding.root.setOnLongClickListener {
+                onBodyItemClickListener?.onBodyLongClick(adapterPosition, currentList[adapterPosition])
+                true
             }
         }
 

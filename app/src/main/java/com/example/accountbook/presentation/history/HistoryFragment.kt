@@ -34,30 +34,20 @@ class HistoryFragment :
     BaseFragment<FragmentHistoryBinding>(R.layout.fragment_history, "HistoryFragment") {
 
     private val mainViewModel: MainViewModel by activityViewModels()
-    private val historyDetailViewModel: HistoryDetailViewModel by activityViewModels ()
+    private val historyDetailViewModel: HistoryDetailViewModel by activityViewModels()
 
-    @Inject lateinit var historyAdapter: HistoryAdapter
+    @Inject
+    lateinit var historyAdapter: HistoryAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = mainViewModel
-        initAppbar()
         initLayout()
         initRecyclerView()
         initObserver()
         initFab()
     }
 
-    private fun initAppbar() {
-        with(binding.historyAppBarLayout) {
-            appBarBackIv.setOnClickListener {
-                mainViewModel.onClickPreMonthBtn()
-            }
-            appBarRightIv.setOnClickListener {
-                mainViewModel.onClickNextMonthBtn()
-            }
-        }
-    }
 
     private fun initFab() {
         binding.historyAddFab.setOnClickListener {
@@ -65,16 +55,21 @@ class HistoryFragment :
         }
     }
 
-    private fun fragmentTransaction(){
+    private fun fragmentTransaction() {
         parentFragmentManager.commit {
             addToBackStack("HistoryFragment")
-            var fragment = parentFragmentManager.findFragmentByTag(HistoryDetailFragment::class.simpleName)
-            fragment = if (fragment == null){
+            var fragment =
+                parentFragmentManager.findFragmentByTag(HistoryDetailFragment::class.simpleName)
+            fragment = if (fragment == null) {
                 HistoryDetailFragment()
-            }else{
+            } else {
                 fragment as HistoryDetailFragment
             }
-            replace(R.id.main_fragment_container_view, fragment, HistoryDetailFragment::class.simpleName)
+            replace(
+                R.id.main_fragment_container_view,
+                fragment,
+                HistoryDetailFragment::class.simpleName
+            )
         }
     }
 
@@ -86,6 +81,30 @@ class HistoryFragment :
                     AppBarBottomSheetFragment.TAG
                 )
             }
+            appBarBackIv.setOnClickListener {
+                if (mainViewModel.isDeleteMode.value!!) {
+                    mainViewModel.resetDeleteModeProperties()
+                    // Todo check items -> no check
+                    historyAdapter.currentList.map {
+                        if (mainViewModel.selectedDeleteItems.value!!.contains(it.id)){
+                            it.selected = false
+                        }
+                    }
+                }else{
+                    mainViewModel.onClickPreMonthBtn()
+                }
+            }
+            appBarRightIv.setOnClickListener {
+                if (mainViewModel.isDeleteMode.value!!){
+                    with(mainViewModel) {
+                        isDeleteMode.value?.let {
+                            deleteHistories()
+                        }
+                    }
+                }else{
+                    mainViewModel.onClickNextMonthBtn()
+                }
+            }
         }
     }
 
@@ -96,12 +115,48 @@ class HistoryFragment :
                 animator.supportsChangeAnimations = false
             }
             adapter = historyAdapter.apply {
-                onBodyItemClickListener = object : HistoryAdapter.OnBodyItemClickListener{
-                    override fun onBodyItemClick(historyListItem: HistoriesListItem) {
-                        fragmentTransaction()
-                        Log.e(TAG, "onBodyItemClick: $historyListItem", )
-                        historyDetailViewModel.setMemberProperties(historyListItem)
-                        historyDetailViewModel.isUpdateMode.value = true
+                onBodyItemClickListener = object : HistoryAdapter.OnBodyItemClickListener {
+                    override fun onBodyItemClick(
+                        position: Int,
+                        historyListItem: HistoriesListItem
+                    ) {
+                        with(mainViewModel){
+                            if (!isDeleteMode.value!!){
+                                fragmentTransaction()
+                                Log.e(TAG, "onBodyItemClick: $historyListItem")
+                                historyDetailViewModel.setMemberProperties(historyListItem)
+                                historyDetailViewModel.isUpdateMode.value = true
+                            }else{
+                                historyListItem.selected = !historyListItem.selected
+                                setDeleteModeTitle()
+                                notifyItemChanged(position)
+                                selectedDeleteItems.value?.let {
+                                    if (it.contains(historyListItem.id)){
+                                        it.remove(historyListItem.id)
+                                    }else{
+                                        it.add(historyListItem.id)
+                                    }
+                                    if (it.isEmpty()){
+                                        resetDeleteModeProperties()
+                                    }else{
+                                        setDeleteModeTitle()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onBodyLongClick(
+                        position: Int,
+                        historyListItem: HistoriesListItem
+                    ) {
+                        mainViewModel.isDeleteMode.value?.let {
+                            if (!it){
+                                mainViewModel.setDeleteModeProperties(historyListItem.id)
+                                historyListItem.selected = !it
+                                historyAdapter.notifyItemChanged(position)
+                            }
+                        }
                     }
                 }
             }
@@ -115,14 +170,24 @@ class HistoryFragment :
                 mainViewModel.getHistoriesTotalData(isExpense)
             }
             historiesTotalData.observe(viewLifecycleOwner) { it ->
-                it.historyList.forEach {
-                    if (it.viewType!= HEADER) Log.e(TAG, "historyData: $it", )
+                with(mainViewModel){
+                    isDeleteMode.value?.let { deleteMode->
+                        var size = selectedDeleteItems.value!!.size
+                        if (!deleteMode) return@let
+                        it.historyList.asSequence()
+                            .map {
+                                if (selectedDeleteItems.value!!.contains(it.id)){
+                                    size--
+                                    it.selected = true
+                                }
+                            }.takeWhile { size >= 0 }
+                            .toList()
+                    }
                 }
                 historyAdapter.submitList(it.historyList)
             }
             curAppbarTitle.observe(viewLifecycleOwner) {
-                Log.e(TAG, "curAppbarTitle: $it ${curAppbarYear.value} ${curAppbarMonth.value}")
-                binding.historyAppBarLayout.appBarTitleTv.text = it
+                if (isDeleteMode.value!!) return@observe
                 setTotalPrice()
                 getHistoriesTotalData(isExpenseLiveData.value!!)
             }
