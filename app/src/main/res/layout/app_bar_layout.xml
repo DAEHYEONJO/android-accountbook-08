@@ -38,6 +38,7 @@
                 android:layout_width="216dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:text="@{viewModel.curAppbarTitle}"
                 android:gravity="center"
                 style="@style/Widget.TextView.KopubWorldDotumPro18_Purple100_Medium.Style" />
 
@@ -47,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/app_base_space_16"
                 android:layout_gravity="end"
-                android:src="@drawable/ic_app_bar_right" />
+                android:src="@{viewModel.isDeleteMode()?@drawable/ic_app_bar_delete:@drawable/ic_app_bar_right}" />
         </androidx.appcompat.widget.Toolbar>
 
         <View

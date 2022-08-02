@@ -3,8 +3,6 @@ package com.example.accountbook.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.accountbook.R
-import com.example.accountbook.data.model.Categories
-import com.example.accountbook.data.model.Payments
 import com.example.accountbook.domain.model.HistoriesTotalData
 import com.example.accountbook.domain.repository.AccountRepository
 import com.example.accountbook.utils.date
@@ -12,14 +10,9 @@ import com.example.accountbook.utils.dateToYearMonth
 import com.example.accountbook.utils.getStartEndOfCurMonth
 import com.example.accountbook.utils.toInt
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -49,13 +42,13 @@ class MainViewModel @Inject constructor(
     private val _historyIncomeChecked = MutableLiveData(true)
     val historyIncomeChecked: LiveData<Boolean> get() = _historyIncomeChecked
     fun onClickIncomeLayout() {
-        _historyIncomeChecked.value = !_historyIncomeChecked.value!!
+        if (!isDeleteMode.value!!) _historyIncomeChecked.value = !_historyIncomeChecked.value!!
     }
 
     private val _historyExpenseChecked = MutableLiveData(true)
     val historyExpenseChecked: LiveData<Boolean> get() = _historyExpenseChecked
     fun onClickExposeLayout() {
-        _historyExpenseChecked.value = !_historyExpenseChecked.value!!
+        if (!isDeleteMode.value!!) _historyExpenseChecked.value = !_historyExpenseChecked.value!!
     }
 
     val curAppbarYear = MutableLiveData<Int>()
@@ -87,6 +80,31 @@ class MainViewModel @Inject constructor(
                 curMonthExpense.value = repository.getSumPrice(1, start, end)
             }
         }
+    }
+
+    val isDeleteMode = MutableLiveData<Boolean>(false)
+    val selectedDeleteItems = MutableLiveData<HashSet<Int>>(HashSet())
+    fun setDeleteModeTitle(size: Int = selectedDeleteItems.value!!.size){
+        curAppbarTitle.value = "${size}개 선택"
+    }
+    fun setDeleteModeProperties(id: Int){
+        isDeleteMode.value = true // delete mode 전환
+        selectedDeleteItems.value!!.add(id) // 첫 아이템 넣기
+        setDeleteModeTitle()
+    }
+    fun resetDeleteModeProperties(){
+        isDeleteMode.value = false
+        selectedDeleteItems.value!!.clear()
+        setTitle(curAppbarYear.value!!, curAppbarMonth.value!!)
+    }
+    fun deleteHistories() = viewModelScope.launch {
+        selectedDeleteItems.value?.let {
+            it.forEach { id ->
+                repository.deleteHistory(id)
+            }
+        }
+        getHistoriesTotalData(isExpenseLiveData.value!!)
+        resetDeleteModeProperties()
     }
 
     init {

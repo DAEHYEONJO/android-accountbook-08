@@ -13,7 +13,8 @@ data class HistoriesListItem(
     var price: Long = 0L,
     var description: String = "",
     var payments: Payments? = null,
-    var categories: Categories? = null
+    var categories: Categories? = null,
+    var selected: Boolean = false
 ){
     var viewType: Int = BODY
     var isLastElement: Boolean = false

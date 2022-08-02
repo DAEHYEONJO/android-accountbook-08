@@ -68,4 +68,10 @@ class AccountRepositoryImpl @Inject constructor(
             dbHelper.updateHistory(mapper.getHistories(historiesListItem))
         }
     }
+
+    override suspend fun deleteHistory(id: Int) {
+        withContext(dispatcher){
+            dbHelper.deleteHistory(id)
+        }
+    }
 }
