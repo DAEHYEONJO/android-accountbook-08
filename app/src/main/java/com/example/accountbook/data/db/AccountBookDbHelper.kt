@@ -380,12 +380,13 @@ class AccountBookDbHelper @Inject constructor(
                     put(AccountBookHistories.COLUMN_NAME_PAYMENT_ID, payments.paymentId)
                     put(AccountBookHistories.COLUMN_NAME_CATEGORY_ID, categories.categoryId)
                 }
-                update(
+                val ret = update(
                     AccountBookHistories.TABLE_NAME,
                     values,
                     "${AccountBookHistories.COLUMN_NAME_ID} = ?",
                     arrayOf(id.toString())
                 )
+                Log.e(TAG, "updateHistory: update ret $ret", )
             }
         }
     }

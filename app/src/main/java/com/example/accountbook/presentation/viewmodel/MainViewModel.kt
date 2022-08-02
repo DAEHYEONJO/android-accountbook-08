@@ -94,6 +94,7 @@ class MainViewModel @Inject constructor(
         curAppbarYear.value = year
         curAppbarMonth.value = month
         setTitle(year, month)
+        Log.e(TAG, "MainViewModel Init: ", )
     }
 
     fun onClickNextMonthBtn() {
