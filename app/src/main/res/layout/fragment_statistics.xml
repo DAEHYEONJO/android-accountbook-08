@@ -1,21 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.example.accountbook.presentation.viewmodel.MainViewModel" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.statistics.StatisticsFragment">
+        tools:context=".presentation.statistics.StatisticsFragment"
+        android:background="@color/primary_off_white_100">
 
-        <!-- TODO: Update blank fragment layout -->
+        <include
+            android:id="@+id/statistics_app_bar_layout"
+            layout="@layout/app_bar_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/statistics_pie_chart"
+            app:viewModel="@{viewModel}"/>
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:id="@+id/statistics_cur_month_total_hardcode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/statistics_total_expense_price"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_app_bar_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/app_base_space_16"
+            android:layout_marginTop="9dp"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Purple100_Bold.Style"/>
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/statistics_cur_month_total_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/statistics_cur_month_total_hardcode_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/statistics_cur_month_total_hardcode_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/app_base_space_16"
+            app:setPriceText="@{viewModel.curMonthExpense}"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Red100_Bold.Style"/>
+
+        <View
+            android:id="@+id/statistics_cur_month_total_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_light_purple_100"
+            android:layout_marginTop="@dimen/recycler_item_space_8"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_cur_month_total_hardcode_tv"/>
+        <com.github.mikephil.charting.charts.PieChart
+            android:backgroundTint="@color/primary_off_white_100"
+            android:id="@+id/statistics_pie_chart"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_cur_month_total_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/recycler_item_space_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="254dp"
+            android:layout_height="254dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

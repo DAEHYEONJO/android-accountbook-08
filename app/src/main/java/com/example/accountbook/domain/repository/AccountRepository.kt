@@ -6,6 +6,7 @@ import com.example.accountbook.data.model.Payments
 import com.example.accountbook.domain.model.CalendarItem
 import com.example.accountbook.domain.model.HistoriesListItem
 import com.example.accountbook.domain.model.HistoriesTotalData
+import com.example.accountbook.domain.model.StatisticsItem
 
 interface AccountRepository {
 
@@ -17,12 +18,14 @@ interface AccountRepository {
     suspend fun insertHistory(historiesListItem: HistoriesListItem)
     suspend fun updateHistory(historiesListItem: HistoriesListItem)
     suspend fun deleteHistory(id: Int)
-    suspend fun getCalendarItems(
+    suspend fun getCalendarHashMap(
         isExpense: Int = 3,
         start: Long,
-        end: Long,
-        year: Int,
-        month: Int,
-        day: Int
-    ): List<CalendarItem>
+        end: Long
+    ): HashMap<String, CalendarItem>
+    suspend fun getStatisticsItems(
+        isExpense: Int = 1,
+        start: Long,
+        end: Long
+    ): List<StatisticsItem>
 }

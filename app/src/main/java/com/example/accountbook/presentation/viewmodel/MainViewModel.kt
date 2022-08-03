@@ -1,11 +1,14 @@
 package com.example.accountbook.presentation.viewmodel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.accountbook.R
 import com.example.accountbook.domain.model.CalendarItem
 import com.example.accountbook.domain.model.HistoriesTotalData
 import com.example.accountbook.domain.repository.AccountRepository
+import com.example.accountbook.domain.usecase.CalendarItemListUseCase
 import com.example.accountbook.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
@@ -16,7 +19,8 @@ import kotlin.collections.HashSet
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: AccountRepository
+    private val repository: AccountRepository,
+    private val calendarItemListUseCase: CalendarItemListUseCase
 ) : ViewModel() {
 
     companion object {
@@ -113,14 +117,16 @@ class MainViewModel @Inject constructor(
         getHistoriesTotalData(isExpenseLiveData.value!!)
         resetDeleteModeProperties()
     }
-    private val _calendarItemList = MutableLiveData<List<CalendarItem>>()
-    val calendarItemList: LiveData<List<CalendarItem>> get() = _calendarItemList
+    private val _calendarItemList = MutableLiveData<List<CalendarItem>?>()
+    val calendarItemList: LiveData<List<CalendarItem>?> get() = _calendarItemList
+    @RequiresApi(Build.VERSION_CODES.O)
     fun fetchCalendarItemList() = viewModelScope.launch {
         val (start, end) = getStartEndOfCurMonth(
             curAppbarYear.value!!,
             curAppbarMonth.value!!
         )
-        _calendarItemList.value = repository.getCalendarItems(
+        _calendarItemList.value = calendarItemListUseCase(
+            isExpense = INCOME_AND_EXPENSE,
             start = start,
             end = end,
             year = curAppbarYear.value!!,

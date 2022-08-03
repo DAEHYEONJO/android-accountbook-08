@@ -14,6 +14,7 @@ import com.example.accountbook.R
 import com.example.accountbook.databinding.FragmentCalendarBinding
 import com.example.accountbook.presentation.adapter.CalendarAdapter
 import com.example.accountbook.presentation.base.BaseFragment
+import com.example.accountbook.presentation.bottomsheet.AppBarBottomSheetFragment
 import com.example.accountbook.presentation.viewmodel.MainViewModel
 import com.example.accountbook.utils.getCommaPriceString
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,15 +45,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 binding.calendarAppBarLayout.appBarTitleTv.text = title
                 setTotalPrice()
                 fetchCalendarItemList()
-                with(binding.calendarRv){
-                    layoutManager = GridLayoutManager(requireContext(), 7)
-                    adapter = calendarAdapter.apply {
-                        deviceWidth = getDeviceWidth()
-                    }
-                }
             }
             calendarItemList.observe(viewLifecycleOwner){ calendarItemList ->
-                calendarItemList.forEach {
+                calendarItemList!!.forEach {
                     Log.d(TAG, "initObserver: $it")
                     calendarAdapter.dayList = calendarItemList
                     calendarAdapter.notifyDataSetChanged()
@@ -73,6 +68,12 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 appBarBackIv.setOnClickListener {
                     mainViewModel.onClickPreMonthBtn()
                 }
+                appBarTitleTv.setOnClickListener {
+                    AppBarBottomSheetFragment().show(
+                        childFragmentManager,
+                        AppBarBottomSheetFragment.TAG
+                    )
+                }
             }
             with(calendarRv){
                 layoutManager = GridLayoutManager(requireContext(), 7)
@@ -80,6 +81,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                     deviceWidth = getDeviceWidth()
                 }
             }
+
         }
     }
 

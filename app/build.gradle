@@ -73,4 +73,7 @@ dependencies {
     //jetpack window api
     implementation 'androidx.window:window:1.0.0'
 
+    //MP Android Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 }
