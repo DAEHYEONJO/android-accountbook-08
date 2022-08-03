@@ -50,10 +50,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.mainBottomNavView.setOnItemSelectedListener {
-            mainViewModel.curSelectedMenuItemId.value = it.itemId
-            supportFragmentManager.fragments.forEach {
-                Log.e(TAG, "fragments: $it", )
-                Log.e(TAG, "fragments: ${supportFragmentManager.backStackEntryCount}", )
+
+            with(mainViewModel){
+                isDeleteMode.value?.let { deleteMode ->
+                    if (deleteMode){
+                        resetDeleteModeProperties()
+                    }
+                }
+                curSelectedMenuItemId.value = it.itemId
             }
 
             if (!it.isChecked) {

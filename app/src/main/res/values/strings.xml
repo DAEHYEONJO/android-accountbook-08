@@ -15,6 +15,9 @@
     <string name="history_detail_app_bar_title">내역 등록</string>
     <string name="button_add">등록하기</string>
     <string name="button_save">저장</string>
+    <string name="total_text">총합</string>
+    <string name="suffix_won">원</string>
+    <string name="prefix_minus">-</string>
 
     <string name="history_detail_date">일자</string>
     <string name="history_detail_price">금액</string>

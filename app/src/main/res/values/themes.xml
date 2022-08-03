@@ -47,6 +47,13 @@
     </style>
 
     <!-- Appearacne Kopub Light Purple-->
+    <style name="Widget.TextView.KopubWorldDotumPro8_Light_Purple100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_light_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_8</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
+    </style>
+
+
     <style name="Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/primary_light_purple_100</item>
         <item name="android:textSize">@dimen/text_font_10</item>
@@ -72,6 +79,18 @@
     </style>
 
     <!-- Appearacne Kopub Purple-->
+    <style name="Widget.TextView.KopubWorldDotumPro8_Purple100_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_8</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro8_Purple100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_8</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
+    </style>
+
     <style name="Widget.TextView.KopubWorldDotumPro10_Purple100_Medium.TextAppearance" parent="">
         <item name="android:textColor">@color/primary_purple_100</item>
         <item name="android:textSize">@dimen/text_font_10</item>
@@ -82,6 +101,12 @@
         <item name="android:textColor">@color/primary_purple_100</item>
         <item name="android:textSize">@dimen/text_font_12</item>
         <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro12_Purple100_Bold.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_purple_100</item>
+        <item name="android:textSize">@dimen/text_font_12</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_bold_700</item>
     </style>
 
     <style name="Widget.TextView.KopubWorldDotumPro14_Purple100_Medium.TextAppearance" parent="">
@@ -104,6 +129,12 @@
     </style>
 
     <!-- Appearacne Kopub Red-->
+    <style name="Widget.TextView.KopubWorldDotumPro8_Red100_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/primary_red_100</item>
+        <item name="android:textSize">@dimen/text_font_8</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
     <style name="Widget.TextView.KopubWorldDotumPro14_Red100_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/primary_red_100</item>
         <item name="android:textSize">@dimen/text_font_14</item>
@@ -126,6 +157,12 @@
     </style>
 
     <!-- Appearacne Kopub Income-->
+    <style name="Widget.TextView.KopubWorldDotumPro8_Income100_Medium.TextAppearance" parent="">
+        <item name="android:textColor">@color/income_color</item>
+        <item name="android:textSize">@dimen/text_font_8</item>
+        <item name="android:fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
+    </style>
+
     <style name="Widget.TextView.KopubWorldDotumPro14_Income100_Bold.TextAppearance" parent="">
         <item name="android:textColor">@color/income_color</item>
         <item name="android:textSize">@dimen/text_font_14</item>
@@ -182,6 +219,20 @@
     </style>
 
     <!-- Style Kopub Purple -->
+    <style name="Widget.TextView.KopubWorldDotumPro8_Purple100_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro8_Purple100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro8_Purple100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro8_Purple100_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Widget.TextView.KopubWorldDotumPro10_Purple100_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KopubWorldDotumPro10_Purple100_Medium.TextAppearance
@@ -192,6 +243,13 @@
     <style name="Widget.TextView.KopubWorldDotumPro12_Purple100_Medium.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KopubWorldDotumPro12_Purple100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.TextView.KopubWorldDotumPro12_Purple100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro12_Purple100_Bold.TextAppearance
         </item>
         <item name="android:includeFontPadding">false</item>
     </style>
@@ -219,6 +277,13 @@
     </style>
 
     <!-- Style Kopub Light Purple -->
+    <style name="Widget.TextView.KopubWorldDotumPro8_Light_Purple100_Bold.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro8_Light_Purple100_Bold.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KopubWorldDotumPro10_Light_Purple100_Bold.TextAppearance
@@ -241,6 +306,13 @@
     </style>
 
     <!-- Style Kopub Red -->
+    <style name="Widget.TextView.KopubWorldDotumPro8_Red100_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro8_Red100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Widget.TextView.KopubWorldDotumPro14_Red100_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KopubWorldDotumPro14_Red100_Bold.TextAppearance
@@ -249,6 +321,13 @@
     </style>
 
     <!-- Style Kopub Income -->
+    <style name="Widget.TextView.KopubWorldDotumPro8_Income100_Medium.Style" parent="">
+        <item name="android:textAppearance">
+            @style/Widget.TextView.KopubWorldDotumPro8_Income100_Medium.TextAppearance
+        </item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
     <style name="Widget.TextView.KopubWorldDotumPro14_Income100_Bold.Style" parent="">
         <item name="android:textAppearance">
             @style/Widget.TextView.KopubWorldDotumPro14_Income100_Bold.TextAppearance

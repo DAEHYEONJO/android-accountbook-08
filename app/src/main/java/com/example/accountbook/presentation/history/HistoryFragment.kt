@@ -2,31 +2,19 @@ package com.example.accountbook.presentation.history
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.accountbook.R
 import com.example.accountbook.databinding.FragmentHistoryBinding
-import com.example.accountbook.domain.model.HEADER
 import com.example.accountbook.domain.model.HistoriesListItem
 import com.example.accountbook.presentation.adapter.HistoryAdapter
 import com.example.accountbook.presentation.base.BaseFragment
 import com.example.accountbook.presentation.bottomsheet.AppBarBottomSheetFragment
 import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
 import com.example.accountbook.presentation.viewmodel.MainViewModel
-import com.example.accountbook.utils.dateToYearMonthDay
-import com.example.accountbook.utils.getStartEndOfCurMonth
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint

@@ -83,7 +83,8 @@
             app:layout_constraintBottom_toBottomOf="@id/history_body_description_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/history_body_description_tv"
-            app:price="@{historyListItem.price}" />
+            app:price="@{historyListItem.price}"
+            app:suffix="@{@string/suffix_won}"/>
 
         <View
             android:id="@+id/history_body_not_last_view"
