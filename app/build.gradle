@@ -70,6 +70,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
-
+    //jetpack window api
+    implementation 'androidx.window:window:1.0.0'
 
 }

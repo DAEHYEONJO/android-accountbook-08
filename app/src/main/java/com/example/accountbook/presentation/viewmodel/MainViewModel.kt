@@ -3,16 +3,16 @@ package com.example.accountbook.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.accountbook.R
+import com.example.accountbook.domain.model.CalendarItem
 import com.example.accountbook.domain.model.HistoriesTotalData
 import com.example.accountbook.domain.repository.AccountRepository
-import com.example.accountbook.utils.date
-import com.example.accountbook.utils.dateToYearMonth
-import com.example.accountbook.utils.getStartEndOfCurMonth
-import com.example.accountbook.utils.toInt
+import com.example.accountbook.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.HashSet
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -21,6 +21,10 @@ class MainViewModel @Inject constructor(
 
     companion object {
         const val TAG = "MainViewModel"
+        const val INCOME_AND_EXPENSE = 3
+        const val INCOME = 2
+        const val EXPENSE = 1
+        const val NOTHING = 0
     }
 
     val curSelectedMenuItemId = MutableLiveData(R.id.bottom_nav_item_history)
@@ -53,8 +57,11 @@ class MainViewModel @Inject constructor(
 
     val curAppbarYear = MutableLiveData<Int>()
     val curAppbarMonth = MutableLiveData<Int>()
-    val curMonthIncome = MutableLiveData<Int>()
-    val curMonthExpense = MutableLiveData<Int>()
+    val curMonthIncome = MutableLiveData<Long>()
+    val curMonthExpense = MutableLiveData<Long>()
+    val curTotalPrice = combine(curMonthIncome.asFlow(), curMonthExpense.asFlow()){ income, expense ->
+        -1*expense + income
+    }.asLiveData()
     val curAppbarTitle = MutableLiveData<String>()
     fun setTitle(year: Int, month: Int) {
         curAppbarTitle.value = "${year}년 ${month}월"
@@ -105,6 +112,21 @@ class MainViewModel @Inject constructor(
         }
         getHistoriesTotalData(isExpenseLiveData.value!!)
         resetDeleteModeProperties()
+    }
+    private val _calendarItemList = MutableLiveData<List<CalendarItem>>()
+    val calendarItemList: LiveData<List<CalendarItem>> get() = _calendarItemList
+    fun fetchCalendarItemList() = viewModelScope.launch {
+        val (start, end) = getStartEndOfCurMonth(
+            curAppbarYear.value!!,
+            curAppbarMonth.value!!
+        )
+        _calendarItemList.value = repository.getCalendarItems(
+            start = start,
+            end = end,
+            year = curAppbarYear.value!!,
+            month = curAppbarMonth.value!!,
+            day = 1
+        )
     }
 
     init {

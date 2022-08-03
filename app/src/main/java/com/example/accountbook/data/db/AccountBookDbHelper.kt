@@ -17,10 +17,12 @@ import com.example.accountbook.data.utils.AccountBookHistories
 import com.example.accountbook.data.utils.AccountBookPayments
 import com.example.accountbook.domain.model.*
 import com.example.accountbook.utils.dateToStringMdEEType
+import com.example.accountbook.utils.dateToStringYYYYMdType
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.HashMap
 
 @Singleton
 class AccountBookDbHelper @Inject constructor(
@@ -92,7 +94,7 @@ class AccountBookDbHelper @Inject constructor(
                     put(AccountBookHistories.COLUMN_NAME_CATEGORY_ID, categories.categoryId)
                 }
                 val ret = insert(AccountBookHistories.TABLE_NAME, null, values)
-                Log.e(TAG, "insertHistory: $ret", )
+                Log.e(TAG, "insertHistory: $ret")
             }
         }
     }
@@ -127,6 +129,35 @@ class AccountBookDbHelper @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getHistoriesTotalDataGroupByDay(
+        isExpense: Int,
+        start: Long,
+        end: Long
+    ): HashMap<String, CalendarItem> {
+        val historiesList = getHistoriesList(isExpense, start, end)
+        val groupByDateList = historiesList
+            .groupBy { dateToStringYYYYMdType(it.date!!) }
+        val dayCalendarItemHm = HashMap<String, CalendarItem>()
+        groupByDateList.forEach { (dateString, historyList) ->
+            val (year, month, day) = dateString.split(" ").map { it.toInt() }
+            val dayIncomePrice = historyList.filter {
+                it.categories!!.isExpense == 0
+            }.sumOf { it.price }
+            val dayExpensePrice = historyList.filter {
+                it.categories!!.isExpense == 1
+            }.sumOf { it.price }
+            dayCalendarItemHm[dateString] = CalendarItem(
+                year = year,
+                month = month,
+                day = day,
+                incomePrice = dayIncomePrice,
+                expensePrice = dayExpensePrice,
+                totalPrice = dayIncomePrice + -1 * dayExpensePrice
+            )
+        }
+        return dayCalendarItemHm
     }
 
     fun getHistoriesTotalData(isExpense: Int, start: Long, end: Long): HistoriesTotalData {
@@ -208,7 +239,7 @@ class AccountBookDbHelper @Inject constructor(
         }
     }
 
-    fun getSumPrice(isExpense: Int, start: Long, end: Long): Int {
+    fun getSumPrice(isExpense: Int, start: Long, end: Long): Long {
         with(readableDatabase) {
             val cursor = rawQuery(
                 getSumPriceSqlWhere(isExpense, start, end),
@@ -216,7 +247,7 @@ class AccountBookDbHelper @Inject constructor(
             )
             return cursor.use { c ->
                 c.moveToFirst()
-                c.getInt(0)
+                c.getLong(0)
             }
         }
     }
@@ -386,7 +417,7 @@ class AccountBookDbHelper @Inject constructor(
                     "${AccountBookHistories.COLUMN_NAME_ID} = ?",
                     arrayOf(id.toString())
                 )
-                Log.e(TAG, "updateHistory: update ret $ret", )
+                Log.e(TAG, "updateHistory: update ret $ret")
             }
         }
     }

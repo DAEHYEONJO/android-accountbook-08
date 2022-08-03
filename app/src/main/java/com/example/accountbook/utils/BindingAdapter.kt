@@ -52,16 +52,17 @@ fun FrameLayout.setCategoryBackground(colorString: String){
     background = originDrawable
 }
 
-@BindingAdapter("isExpense", "price")
-fun TextView.setPriceStyleText(isExpense: Int, price: Long){
+@BindingAdapter("isExpense", "price", "suffix")
+fun TextView.setPriceStyleText(isExpense: Int, price: Long, suffix: String = ""){
     text = if (isExpense==1){
         setTextAppearance(R.style.Widget_TextView_KopubWorldDotumPro14_Red100_Bold_TextAppearance)
-        "-${getCommaPriceString(price)}원"
+        "-${getCommaPriceString(price)}$suffix"
     }else{
         setTextAppearance(R.style.Widget_TextView_KopubWorldDotumPro14_Income100_Bold_TextAppearance)
-        "${getCommaPriceString(price)}원"
+        "${getCommaPriceString(price)}$suffix"
     }
 }
+
 
 @BindingAdapter("app:changeButtonBackground")
 fun AppCompatButton.changeButtonBackground(isButtonEnabled: Boolean){

@@ -25,7 +25,6 @@ fun stringToYyyyMdEEString(year: Int, month: Int, day: Int): String {
 fun stringToDate(year: Int, month: Int, day: Int): Date{
     val date = Calendar.getInstance()
     date.set(year, month, day)
-    Log.e("DateUtils", "stringToDate: ${date.time}", )
     return date.time
 }
 
@@ -44,6 +43,7 @@ fun dateToYearMonthDay(date: Date): List<Int>{
         .split(" ")
         .map { it.toInt() }
 }
+
 fun getStartEndOfCurMonth(startYear: Int, startMonth: Int): List<Long>{
     val startDay = 1
     val startHour = 0
@@ -58,10 +58,8 @@ fun getStartEndOfCurMonth(startYear: Int, startMonth: Int): List<Long>{
     return listOf(startInstance.time.time, lastInstance.time.time)
 }
 
-
-
-fun dateToStringYYYYMdEEType(date: Date): String {
-    val pattern = "yyyy. M. d E요일"
+fun dateToStringYYYYMdType(date: Date): String {
+    val pattern = "yyyy M d"
     val formatter = SimpleDateFormat(pattern)
     return formatter.format(date)
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="calendarItem"
+            type="com.example.accountbook.domain.model.CalendarItem" />
+        <import type="android.view.View"/>
+        <import type="com.example.accountbook.R"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:background="@color/primary_off_white_100"
+        android:layout_height="50dp">
+
+        <View
+            android:id="@+id/calendar_item_dummy_view"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/calendar_item_income_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.TextView.KopubWorldDotumPro8_Income100_Medium.Style"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_item_dummy_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/checkbox_space_4" />
+
+        <TextView
+            android:id="@+id/calendar_item_expense_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="188888"
+            style="@style/Widget.TextView.KopubWorldDotumPro8_Red100_Medium.Style"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/checkbox_space_4"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_item_income_tv"
+            android:layout_marginTop="1dp" />
+
+        <TextView
+            android:id="@+id/calendar_item_total_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.TextView.KopubWorldDotumPro8_Purple100_Medium.Style"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/checkbox_space_4"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_item_expense_tv"
+            android:layout_marginTop="1dp" />
+
+        <TextView
+            android:id="@+id/day_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="1"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_view"
+            app:layout_constraintEnd_toStartOf="@+id/right_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            style="@style/Widget.TextView.KopubWorldDotumPro8_Purple100_Bold.Style" />
+
+        <View
+            android:id="@+id/bottom_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_purple_40"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <View
+            android:id="@+id/right_view"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/primary_purple_40"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
