@@ -15,6 +15,7 @@ import com.example.accountbook.databinding.FragmentCalendarBinding
 import com.example.accountbook.presentation.adapter.CalendarAdapter
 import com.example.accountbook.presentation.base.BaseFragment
 import com.example.accountbook.presentation.bottomsheet.AppBarBottomSheetFragment
+import com.example.accountbook.presentation.viewmodel.CalendarViewModel
 import com.example.accountbook.presentation.viewmodel.MainViewModel
 import com.example.accountbook.utils.getCommaPriceString
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment_calendar, "CalendarFragment") {
 
     private val mainViewModel: MainViewModel by activityViewModels ()
+    private val calendarViewModel: CalendarViewModel by activityViewModels()
     @Inject lateinit var calendarAdapter: CalendarAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,9 +46,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             curAppbarTitle.observe(viewLifecycleOwner){ title ->
                 binding.calendarAppBarLayout.appBarTitleTv.text = title
                 setTotalPrice()
-                fetchCalendarItemList()
+                calendarViewModel.fetchCalendarItemList(curAppbarYear.value!!, curAppbarMonth.value!!)
             }
-            calendarItemList.observe(viewLifecycleOwner){ calendarItemList ->
+            calendarViewModel.calendarItemList.observe(viewLifecycleOwner){ calendarItemList ->
                 calendarItemList!!.forEach {
                     Log.d(TAG, "initObserver: $it")
                     calendarAdapter.dayList = calendarItemList

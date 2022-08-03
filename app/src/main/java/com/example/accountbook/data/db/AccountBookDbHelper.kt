@@ -99,7 +99,7 @@ class AccountBookDbHelper @Inject constructor(
         }
     }
 
-    private fun getHistoriesList(isExpense: Int, start: Long, end: Long): List<HistoriesListItem> {
+    fun getHistoriesList(isExpense: Int, start: Long, end: Long): List<HistoriesListItem> {
         // isExpense == 3 -> 수입 + 지출
         // isExpense == 2 -> 수입
         // isExpense == 1 -> 지출

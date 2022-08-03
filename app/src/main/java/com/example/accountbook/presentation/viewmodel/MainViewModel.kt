@@ -19,8 +19,7 @@ import kotlin.collections.HashSet
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: AccountRepository,
-    private val calendarItemListUseCase: CalendarItemListUseCase
+    private val repository: AccountRepository
 ) : ViewModel() {
 
     companion object {
@@ -36,10 +35,11 @@ class MainViewModel @Inject constructor(
     private val _historiesTotalData = MutableLiveData<HistoriesTotalData>()
     val historiesTotalData: LiveData<HistoriesTotalData> get() = _historiesTotalData
     fun getHistoriesTotalData(isExpense: Int) = viewModelScope.launch {
-        val (start, end) = getStartEndOfCurMonth(
-            curAppbarYear.value!!,
-            curAppbarMonth.value!!
-        )
+//        val (start, end) = getStartEndOfCurMonth(
+//            curAppbarYear.value!!,
+//            curAppbarMonth.value!!
+//        )
+        val(start, end) = getStartEndLongValue()
         _historiesTotalData.value = repository.getHistoriesTotalData(
             isExpense = isExpense,
             start = start,
@@ -79,10 +79,11 @@ class MainViewModel @Inject constructor(
         }.asLiveData()
 
     fun setTotalPrice() {
-        val (start, end) = getStartEndOfCurMonth(
-            curAppbarYear.value!!,
-            curAppbarMonth.value!!
-        )
+//        val (start, end) = getStartEndOfCurMonth(
+//            curAppbarYear.value!!,
+//            curAppbarMonth.value!!
+//        )
+        val(start, end) = getStartEndLongValue()
         with(viewModelScope) {
             launch {
                 curMonthIncome.value = repository.getSumPrice(0, start, end)
@@ -117,23 +118,13 @@ class MainViewModel @Inject constructor(
         getHistoriesTotalData(isExpenseLiveData.value!!)
         resetDeleteModeProperties()
     }
-    private val _calendarItemList = MutableLiveData<List<CalendarItem>?>()
-    val calendarItemList: LiveData<List<CalendarItem>?> get() = _calendarItemList
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun fetchCalendarItemList() = viewModelScope.launch {
-        val (start, end) = getStartEndOfCurMonth(
+    fun getStartEndLongValue(): List<Long> {
+        return getStartEndOfCurMonth(
             curAppbarYear.value!!,
             curAppbarMonth.value!!
         )
-        _calendarItemList.value = calendarItemListUseCase(
-            isExpense = INCOME_AND_EXPENSE,
-            start = start,
-            end = end,
-            year = curAppbarYear.value!!,
-            month = curAppbarMonth.value!!,
-            day = 1
-        )
     }
+
 
     init {
         val (year, month) = dateToYearMonth(date)
