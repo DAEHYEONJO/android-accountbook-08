@@ -10,8 +10,10 @@ import com.example.accountbook.utils.dateToYearMonthDay
 import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.collections.ArrayList
 
+@Singleton
 class CalendarItemListUseCase @Inject constructor(private val repository: AccountRepository) {
 
     @RequiresApi(Build.VERSION_CODES.O)

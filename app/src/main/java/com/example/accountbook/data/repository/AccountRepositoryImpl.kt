@@ -93,7 +93,7 @@ class AccountRepositoryImpl @Inject constructor(
         start: Long,
         end: Long
     ): HashMap<String, CalendarItem> {
-        return withContext(dispatcher){
+        return withContext(dispatcher) {
             dbHelper.getHistoriesTotalDataGroupByDay(
                 isExpense, start, end
             )
@@ -105,9 +105,9 @@ class AccountRepositoryImpl @Inject constructor(
         start: Long,
         end: Long
     ): List<StatisticsItem> {
-        return withContext(dispatcher){
-
-            emptyList()
+        return withContext(dispatcher) {
+            dbHelper.getHistoriesList(isExpense, start, end)
+                .map { domainToPresenterMapper.getStatisticsItem(it) }
         }
     }
 
