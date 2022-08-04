@@ -1,21 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="viewModel"
+            type="com.example.accountbook.presentation.viewmodel.MainViewModel" />
 
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.CalendarFragment">
+        android:background="@color/primary_off_white_100"
+        tools:context=".presentation.calendar.CalendarFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <include
+            android:id="@+id/calendar_app_bar_layout"
+            layout="@layout/app_bar_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:viewModel="@{viewModel}"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendar_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_app_bar_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/calendar_income_hardcode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/income_text"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Purple100_Medium.Style"
+            android:layout_marginTop="@dimen/recycler_item_space_24"
+            android:layout_marginStart="@dimen/app_base_space_16"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_rv"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/calendar_income_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/calendar_income_hardcode_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/calendar_income_hardcode_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:setPriceText="@{viewModel.curMonthIncome}"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Income100_Bold.Style"
+            android:layout_marginEnd="@dimen/app_base_space_16"/>
+
+        <View
+            android:id="@+id/calendar_income_view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="@+id/calendar_income_hardcode_tv"
+            app:layout_constraintEnd_toEndOf="@+id/calendar_income_tv"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_income_hardcode_tv"
+            android:layout_marginTop="@dimen/recycler_item_space_8"
+            android:background="@color/primary_light_purple_100"/>
+
+        <TextView
+            android:id="@+id/calendar_expense_hardcode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expense_text"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Purple100_Medium.Style"
+            android:layout_marginTop="@dimen/recycler_item_space_8"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_income_view"
+            app:layout_constraintStart_toStartOf="@+id/calendar_income_view" />
+
+        <TextView
+            android:id="@+id/calendar_expense_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/calendar_expense_hardcode_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/calendar_expense_hardcode_tv"
+            app:layout_constraintEnd_toEndOf="@+id/calendar_income_view"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Red100_Bold.Style"
+            />
+
+        <View
+            android:id="@+id/calendar_expense_view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="@+id/calendar_expense_hardcode_tv"
+            app:layout_constraintEnd_toEndOf="@+id/calendar_expense_tv"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_expense_hardcode_tv"
+            android:layout_marginTop="@dimen/recycler_item_space_8"
+            android:background="@color/primary_light_purple_100"/>
+
+        <TextView
+            android:id="@+id/calendar_total_hardcode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_text"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Purple100_Medium.Style"
+            android:layout_marginTop="@dimen/recycler_item_space_8"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_expense_view"
+            app:layout_constraintStart_toStartOf="@+id/calendar_expense_view" />
+
+
+        <TextView
+            android:id="@+id/calendar_total_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/calendar_total_hardcode_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/calendar_total_hardcode_tv"
+            app:layout_constraintEnd_toEndOf="@+id/calendar_expense_view"
+            app:setPriceText="@{viewModel.curTotalPrice}"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Purple100_Bold.Style" />
+
+        <View
+            android:id="@+id/calendar_total_view"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendar_total_hardcode_tv"
+            android:layout_marginTop="@dimen/recycler_item_space_8"
+            android:background="@color/primary_purple_100"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

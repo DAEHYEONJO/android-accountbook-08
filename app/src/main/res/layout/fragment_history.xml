@@ -7,13 +7,15 @@
         <variable
             name="viewModel"
             type="com.example.accountbook.presentation.viewmodel.MainViewModel" />
+        <import type="android.view.View"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".presentation.HistoryFragment">
+        android:background="@color/primary_off_white_100"
+        tools:context=".presentation.history.HistoryFragment">
 
         <include
             android:id="@+id/history_app_bar_layout"
@@ -34,6 +36,8 @@
                 android:layout_height="30dp"
                 android:onClick="@{() -> viewModel.onClickIncomeLayout()}"
                 app:setBackgroundSyncWithToggleBtn="@{viewModel.historyIncomeChecked}"
+                android:shadowColor="#00FFFFFF"
+                android:backgroundTint="@{viewModel.isDeleteMode?@color/primary_purple_30:viewModel.historyIncomeChecked?@color/primary_purple_100:@color/primary_light_purple_100}"
                 android:background="@drawable/checkbox_checked_true_left_background_radius_10">
 
                 <androidx.appcompat.widget.AppCompatCheckBox
@@ -43,6 +47,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:enabled="@{!viewModel.isDeleteMode()}"
                     android:onClick="@{() -> viewModel.onClickIncomeLayout()}"
                     android:checked="@{viewModel.historyIncomeChecked}"
                     android:layout_marginStart="@dimen/checkbox_space_33"
@@ -54,7 +59,7 @@
                     android:id="@+id/checkbox_history_income_hardcode_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/checkbox_income_text"
+                    android:text="@string/income_text"
                     app:layout_constraintTop_toTopOf="@+id/checkbox_history_income_cb"
                     app:layout_constraintBottom_toBottomOf="@+id/checkbox_history_income_cb"
                     app:layout_constraintStart_toEndOf="@+id/checkbox_history_income_cb"
@@ -80,6 +85,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="30dp"
+                android:backgroundTint="@{viewModel.isDeleteMode?@color/primary_purple_30:viewModel.historyExpenseChecked?@color/primary_purple_100:@color/primary_light_purple_100}"
                 android:onClick="@{() -> viewModel.onClickExposeLayout()}"
                 app:setBackgroundSyncWithToggleBtn="@{viewModel.historyExpenseChecked}"
                 android:background="@drawable/checkbox_checked_true_right_background_radius_10">
@@ -91,6 +97,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    android:enabled="@{!viewModel.isDeleteMode()}"
                     android:onClick="@{() -> viewModel.onClickExposeLayout()}"
                     android:checked="@{viewModel.historyExpenseChecked}"
                     android:layout_marginStart="@dimen/checkbox_space_39"
@@ -102,7 +109,7 @@
                     android:id="@+id/checkbox_history_expense_hardcode_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/checkbox_expense_text"
+                    android:text="@string/expense_text"
                     app:layout_constraintTop_toTopOf="@+id/checkbox_history_expense_cb"
                     app:layout_constraintBottom_toBottomOf="@+id/checkbox_history_expense_cb"
                     app:layout_constraintStart_toEndOf="@+id/checkbox_history_expense_cb"
@@ -135,7 +142,15 @@
                 app:layout_constraintBottom_toTopOf="@+id/history_add_fab"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:visibility="@{viewModel.historiesTotalData.historyList.empty?View.GONE:View.VISIBLE}"
                 app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/history_empty_list"
+                android:visibility="@{viewModel.historiesTotalData.historyList.empty?View.VISIBLE:View.GONE}"
+                style="@style/Widget.TextView.KopubWorldDotumPro12_EmptyList_Medium.Style"
+                android:gravity="center"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/history_add_fab"
@@ -154,15 +169,5 @@
                 android:layout_marginEnd="@dimen/app_base_space_16"
                 android:layout_marginBottom="@dimen/app_base_space_16"/>
         </FrameLayout>
-
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
-<!--           -->
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-
-
     </LinearLayout>
 </layout>

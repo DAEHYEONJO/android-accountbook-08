@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="categories"
+            type="com.example.accountbook.data.model.Categories" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/category_spinner_layout"
+            android:layout_width="58dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/app_base_space_16"
+            android:layout_marginStart="@dimen/app_base_space_16"
+            app:setCategoryBackground="@{categories.labelColor}"
+            android:background="@drawable/category_background_999"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/category_spinner_tv"
+                style="@style/Widget.TextView.KopubWorldDotumPro10_White100_Bold.Style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="@dimen/recycler_item_space_8"
+                android:layout_marginTop="@dimen/checkbox_space_4"
+                android:layout_marginEnd="@dimen/recycler_item_space_8"
+                android:layout_marginBottom="@dimen/checkbox_space_4"
+                android:text="@{categories.category}"/>
+        </FrameLayout>
+
+
+        <ImageView
+            android:id="@+id/category_spinner_iv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/category_spinner_layout"
+            app:layout_constraintBottom_toBottomOf="@+id/category_spinner_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/app_base_space_16"
+            android:src="@drawable/ic_add_purple" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -17,6 +17,12 @@ import javax.inject.Singleton
 class HistoryAdapter @Inject constructor()
     : ListAdapter<HistoriesListItem, RecyclerView.ViewHolder>(diffUtil) {
 
+    interface OnBodyItemClickListener{
+        fun onBodyItemClick(position: Int, historyListItem: HistoriesListItem)
+        fun onBodyLongClick(position: Int, historyListItem: HistoriesListItem)
+    }
+    var onBodyItemClickListener: OnBodyItemClickListener? = null
+
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<HistoriesListItem>() {
             override fun areItemsTheSame(
@@ -43,7 +49,18 @@ class HistoryAdapter @Inject constructor()
         }
     }
 
-    class BodyViewHolder(private val binding: HistoryBodyItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class BodyViewHolder(val binding: HistoryBodyItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+                onBodyItemClickListener?.onBodyItemClick(adapterPosition, currentList[adapterPosition])
+            }
+            binding.root.setOnLongClickListener {
+                onBodyItemClickListener?.onBodyLongClick(adapterPosition, currentList[adapterPosition])
+                true
+            }
+        }
+
         fun bind(historyListItem: HistoriesListItem) {
             binding.historyListItem = historyListItem
             binding.executePendingBindings()

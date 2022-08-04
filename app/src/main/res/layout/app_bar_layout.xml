@@ -8,58 +8,53 @@
             type="com.example.accountbook.presentation.viewmodel.MainViewModel" />
     </data>
 
-    <merge>
+    <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/app_bar_layout"
+        android:background="@color/primary_off_white_100"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
 
-        <com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/app_bar_layout"
-            android:background="@color/primary_off_white_100"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tool_bar_tb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:elevation="0dp">
+            app:contentInsetStart="0dp">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/tool_bar_tb"
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/app_bar_back_iv"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:contentInsetStart="0dp">
+                android:layout_marginStart="@dimen/app_base_space_16"
+                android:layout_gravity="start"
+                android:src="@drawable/ic_app_bar_left" />
 
-                <ImageView
-                    android:id="@+id/app_bar_back_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/app_base_space_16"
-                    android:layout_gravity="start"
-                    android:onClick="@{() -> viewModel.onClickPreMonthBtn()}"
-                    android:src="@drawable/ic_app_bar_left" />
+            <TextView
+                android:id="@+id/app_bar_title_tv"
+                android:layout_width="216dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@{viewModel.curAppbarTitle}"
+                android:gravity="center"
+                style="@style/Widget.TextView.KopubWorldDotumPro18_Purple100_Medium.Style" />
 
-                <TextView
-                    android:id="@+id/app_bar_title_tv"
-                    android:layout_width="216dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    style="@style/Widget.TextView.KopubWorldDotumPro18_Purple100_Medium.Style"
-                    android:text="@{viewModel.curAppbarTitle}" />
+            <ImageView
+                android:id="@+id/app_bar_right_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/app_base_space_16"
+                android:layout_gravity="end"
+                android:src="@{viewModel.isDeleteMode()?@drawable/ic_app_bar_delete:@drawable/ic_app_bar_right}" />
+        </androidx.appcompat.widget.Toolbar>
 
-                <ImageView
-                    android:id="@+id/app_bar_right_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/app_base_space_16"
-                    android:layout_gravity="end"
-                    android:onClick="@{() -> viewModel.onClickNextMonthBtn()}"
-                    android:src="@drawable/ic_app_bar_right" />
-            </androidx.appcompat.widget.Toolbar>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/primary_purple_100" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/primary_purple_100" />
-
-        </com.google.android.material.appbar.AppBarLayout>
-    </merge>
+    </com.google.android.material.appbar.AppBarLayout>
 </layout>

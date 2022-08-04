@@ -9,6 +9,9 @@ object AccountBookContract {
     const val ASC = "ASC"
     const val DESC = "DESC"
 
+    fun getSumPriceSqlWhere(isExpense: Int, start: Long, end: Long) = "SELECT SUM(${AccountBookHistories.COLUMN_NAME_PRICE}) FROM ${AccountBookHistories.TABLE_NAME} " +
+            "NATURAL JOIN ${AccountBookCategories.TABLE_NAME} WHERE ${AccountBookCategories.COLUMN_NAME_IS_EXPENSE} = $isExpense " +
+            "AND ${AccountBookHistories.COLUMN_NAME_DATE} BETWEEN $start AND $end"
     fun getDeleteAllSql(tableName: String) = "DELETE FROM $tableName"
     fun getSelectAllSql(tableName: String) = "SELECT * FROM $tableName"
     fun getSelectAllSqlWhereOrderBy(
@@ -87,6 +90,7 @@ object AccountBookCategories {
             "$COLUMN_NAME_IS_EXPENSE INTEGER NOT NULL, " +
             "PRIMARY KEY ($COLUMN_NAME_ID)" +
             ");"
+    fun getSelectSqlWhereIsExpense(isExpense: Int) = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_IS_EXPENSE = $isExpense"
     const val SQL_SELECT_BY_CATEGORY_QUERY =
         "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_CATEGORY = ?"
     const val SQL_SELECT_BY_ID_QUERY = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_ID = ?"

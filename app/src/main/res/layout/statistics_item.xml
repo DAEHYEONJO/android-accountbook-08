@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="statisticsItem"
+            type="com.example.accountbook.domain.model.StatisticsItem" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/statistics_category_layout"
+            android:layout_width="58dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/app_base_space_16"
+            android:layout_marginTop="@dimen/recycler_item_space_8"
+            android:background="@drawable/category_background_999"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setCategoryBackground="@{statisticsItem.categories.labelColor}">
+
+            <TextView
+                android:id="@+id/statistics_category_tv"
+                style="@style/Widget.TextView.KopubWorldDotumPro10_White100_Bold.Style"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="@dimen/recycler_item_space_8"
+                android:layout_marginTop="@dimen/checkbox_space_4"
+                android:layout_marginEnd="@dimen/recycler_item_space_8"
+                android:layout_marginBottom="@dimen/checkbox_space_4"
+                android:text="@{statisticsItem.categories.category}" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/statistics_expense_price"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Purple100_Medium.Style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/recycler_item_space_8"
+            app:layout_constraintBottom_toBottomOf="@+id/statistics_category_layout"
+            app:layout_constraintStart_toEndOf="@+id/statistics_category_layout"
+            app:layout_constraintTop_toTopOf="@+id/statistics_category_layout"
+            app:setPriceText="@{statisticsItem.expensePrice}" />
+
+        <TextView
+            android:id="@+id/statistics_percentage_tv"
+            style="@style/Widget.TextView.KopubWorldDotumPro14_Purple100_Bold.Style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/app_base_space_16"
+            android:gravity="center"
+            android:text="@{statisticsItem.percentage+`%`}"
+            app:layout_constraintBottom_toBottomOf="@+id/statistics_expense_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/statistics_expense_price" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/recycler_item_space_8"
+            android:background="@color/primary_purple_40"
+            android:visibility="@{statisticsItem.isLast?View.INVISIBLE: View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@+id/statistics_percentage_tv"
+            app:layout_constraintStart_toStartOf="@+id/statistics_category_layout"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_percentage_tv" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

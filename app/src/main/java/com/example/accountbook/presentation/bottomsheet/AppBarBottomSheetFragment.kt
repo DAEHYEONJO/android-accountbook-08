@@ -11,6 +11,10 @@ import androidx.fragment.app.activityViewModels
 import com.example.accountbook.R
 import com.example.accountbook.databinding.FragmentAppBarBottomSheetBinding
 import com.example.accountbook.presentation.viewmodel.MainViewModel
+import com.example.accountbook.utils.MAX_MONTH
+import com.example.accountbook.utils.MAX_YEAR
+import com.example.accountbook.utils.MIN_MONTH
+import com.example.accountbook.utils.MIN_YEAR
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.FragmentScoped
@@ -44,19 +48,20 @@ class AppBarBottomSheetFragment : BottomSheetDialogFragment() {
     private fun initNumberPicker() {
         with(binding){
             with(bottomSheetYearPicker){
-                minValue = 2000
-                maxValue = 2022
+                minValue = MIN_YEAR
+                maxValue = MAX_YEAR
                 value = mainViewModel.curAppbarYear.value!!
             }
             with(bottomSheetMonthPicker){
-                minValue = 1
-                maxValue = 12
+                minValue = MIN_MONTH
+                maxValue = MAX_MONTH
                 value = mainViewModel.curAppbarMonth.value!!
             }
             bottomSheetSelectBtn.setOnClickListener {
                 with(mainViewModel){
                     curAppbarYear.value = bottomSheetYearPicker.value
                     curAppbarMonth.value = bottomSheetMonthPicker.value
+                    setTitle(bottomSheetYearPicker.value, bottomSheetMonthPicker.value)
                 }
                 dismiss()
             }
