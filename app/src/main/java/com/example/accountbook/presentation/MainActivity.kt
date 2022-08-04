@@ -4,13 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.core.view.doOnLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.commit
 import com.example.accountbook.R
 import com.example.accountbook.data.db.AccountBookDbHelper
 import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
-import com.example.accountbook.data.utils.AccountBookHistories
 import com.example.accountbook.databinding.ActivityMainBinding
 import com.example.accountbook.presentation.calendar.CalendarFragment
 import com.example.accountbook.presentation.history.HistoryFragment
@@ -18,6 +18,7 @@ import com.example.accountbook.presentation.setting.SettingFragment
 import com.example.accountbook.presentation.statistics.StatisticsFragment
 import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
 import com.example.accountbook.presentation.viewmodel.MainViewModel
+import com.example.accountbook.presentation.viewmodel.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
     private val historyDetailViewModel: HistoryDetailViewModel by viewModels()
+    private val settingViewModel: SettingViewModel by viewModels()
     private val binding: ActivityMainBinding by lazy {
         DataBindingUtil.setContentView(
             this@MainActivity,
@@ -45,6 +47,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBottomNavigation() {
+        binding.mainBottomNavView.doOnLayout { 
+            settingViewModel.bottomNavigationHeight = it.height
+            Log.e(TAG, "initBottomNavigation: ${it.height}", )
+        }
         if (supportFragmentManager.fragments.isEmpty()) {
             setFragment(mainViewModel.curSelectedMenuItemId.value!!)
         }
@@ -98,6 +104,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        historyDetailViewModel.resetMemberProperties()
         super.onBackPressed()
     }
 }

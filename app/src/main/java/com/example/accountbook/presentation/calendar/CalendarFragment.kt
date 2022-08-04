@@ -1,11 +1,13 @@
 package com.example.accountbook.presentation.calendar
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.window.layout.WindowMetrics
@@ -28,6 +30,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private val calendarViewModel: CalendarViewModel by activityViewModels()
     @Inject lateinit var calendarAdapter: CalendarAdapter
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = mainViewModel
@@ -41,6 +44,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         return windowMetrics.bounds.width()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun initObserver() {
         with(mainViewModel){
             curAppbarTitle.observe(viewLifecycleOwner){ title ->
@@ -79,6 +83,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             }
             with(calendarRv){
                 layoutManager = GridLayoutManager(requireContext(), 7)
+                isNestedScrollingEnabled = false
                 adapter = calendarAdapter.apply {
                     deviceWidth = getDeviceWidth()
                 }

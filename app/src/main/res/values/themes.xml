@@ -170,8 +170,7 @@
     </style>
 
     <!-- Style BottomNavigationView -->
-    <style name="Widget.BottomNavigationView"
-        parent="Widget.Design.BottomNavigationView">
+    <style name="Widget.BottomNavigationView" parent="Widget.Design.BottomNavigationView">
         <item name="fontFamily">@font/ko_pub_world_dobum_pro_medium_500</item>
     </style>
 
@@ -355,7 +354,7 @@
     </style>
 
     <!-- Number Picker -->
-    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar" >
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:textColorPrimary">@color/primary_purple_100</item>
     </style>
 
@@ -365,14 +364,19 @@
 
     <!-- Date Picker -->
     <style name="AppTheme.DatePickerDialog" parent="Theme.MaterialComponents.Light.Dialog">
-        <item name="android:textColorPrimaryInverse">@color/primary_light_purple_100</item> <!--MM월DD일(E)색-->
+        <item name="android:textColorPrimaryInverse">@color/primary_light_purple_100
+        </item> <!--MM월DD일(E)색-->
         <item name="android:textColorSecondaryInverse">@color/primary_purple_100</item> <!--년도색-->
         <item name="colorAccent">@color/primary_off_white_100</item><!--header background-->
-        <item name="android:windowBackground">@color/primary_off_white_100</item>     <!--calendar background-->
-        <item name="android:colorControlActivated">@color/primary_yellow_100</item> <!--selected day-->
+        <item name="android:windowBackground">@color/primary_off_white_100
+        </item>     <!--calendar background-->
+        <item name="android:colorControlActivated">@color/primary_yellow_100
+        </item> <!--selected day-->
         <item name="android:colorControlHighlight">@color/primary_yellow_100</item>
-        <item name="android:textColorPrimary">@color/primary_light_purple_100</item> <!--days of the month-->
-        <item name="android:textColorSecondary">@color/primary_purple_100</item>    <!--days of the week-->
+        <item name="android:textColorPrimary">@color/primary_light_purple_100
+        </item> <!--days of the month-->
+        <item name="android:textColorSecondary">@color/primary_purple_100
+        </item>    <!--days of the week-->
     </style>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">

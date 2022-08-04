@@ -66,5 +66,41 @@
 
     <color name="income_color">#4EAABA</color>
     <color name="empty_list_color">#3F3F3F</color>
+    
+    <array name="expense_category_color_array">
+        <item>@color/secondary_blue1_100</item>
+        <item>@color/secondary_blue2_100</item>
+        <item>@color/secondary_blue3_100</item>
+        <item>@color/secondary_blue4_100</item>
+        <item>@color/secondary_blue5_100</item>
+        <item>@color/secondary_green1_100</item>
+        <item>@color/secondary_green2_100</item>
+        <item>@color/secondary_green3_100</item>
+        <item>@color/secondary_green4_100</item>
+        <item>@color/secondary_green5_100</item>
+        <item>@color/secondary_purple1_100</item>
+        <item>@color/secondary_purple2_100</item>
+        <item>@color/secondary_purple3_100</item>
+        <item>@color/secondary_purple4_100</item>
+        <item>@color/secondary_purple5_100</item>
+        <item>@color/secondary_pink1_100</item>
+        <item>@color/secondary_pink2_100</item>
+        <item>@color/secondary_pink3_100</item>
+        <item>@color/secondary_pink4_100</item>
+        <item>@color/secondary_pink5_100</item>
+    </array>
+
+    <array name="income_category_color_array">
+        <item>@color/secondary_olive1_100</item>
+        <item>@color/secondary_olive2_100</item>
+        <item>@color/secondary_olive3_100</item>
+        <item>@color/secondary_olive4_100</item>
+        <item>@color/secondary_olive5_100</item>
+        <item>@color/secondary_yellow1_100</item>
+        <item>@color/secondary_yellow2_100</item>
+        <item>@color/secondary_yellow3_100</item>
+        <item>@color/secondary_yellow4_100</item>
+        <item>@color/secondary_yellow5_100</item>
+    </array>
 
 </resources>

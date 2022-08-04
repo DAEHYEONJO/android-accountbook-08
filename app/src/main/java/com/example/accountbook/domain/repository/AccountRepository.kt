@@ -28,4 +28,8 @@ interface AccountRepository {
         start: Long,
         end: Long
     ): List<StatisticsItem>
+    suspend fun insertPayments(payments: Payments): Boolean
+    suspend fun insertCategories(categories: Categories): Boolean
+    suspend fun updateCategories(categories: Categories)
+    suspend fun updatePayments(payments: Payments)
 }

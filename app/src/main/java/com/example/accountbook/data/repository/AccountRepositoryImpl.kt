@@ -1,8 +1,5 @@
 package com.example.accountbook.data.repository
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import com.example.accountbook.data.db.AccountBookDbHelper
 import com.example.accountbook.data.mapper.DomainToPresenterMapper
 import com.example.accountbook.data.mapper.PresenterToDomainMapper
@@ -14,14 +11,10 @@ import com.example.accountbook.domain.model.HistoriesListItem
 import com.example.accountbook.domain.model.HistoriesTotalData
 import com.example.accountbook.domain.model.StatisticsItem
 import com.example.accountbook.domain.repository.AccountRepository
-import com.example.accountbook.utils.dateToYearMonthDay
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 @Singleton
@@ -111,5 +104,27 @@ class AccountRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun insertPayments(payments: Payments): Boolean {
+        return withContext(dispatcher){
+            dbHelper.insertPayment(payments)
+        }
+    }
 
+    override suspend fun insertCategories(categories: Categories): Boolean {
+        return withContext(dispatcher){
+            dbHelper.insertCategories(categories)
+        }
+    }
+
+    override suspend fun updateCategories(categories: Categories) {
+        return withContext(dispatcher){
+            dbHelper.updateCategory(categories)
+        }
+    }
+
+    override suspend fun updatePayments(payments: Payments) {
+        return withContext(dispatcher){
+            dbHelper.updatePayment(payments)
+        }
+    }
 }
