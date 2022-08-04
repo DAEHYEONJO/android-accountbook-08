@@ -80,6 +80,7 @@ class HistoryDetailFragment
 
     private fun initRadioGroup() {
         with(binding) {
+            this.mvm = mainViewModel
             this.viewModel = historyDetailViewModel
             if (historyDetailViewModel.isUpdateMode.value == true) return@with
             historyDetailViewModel.isExpenseChecked.value = mainViewModel.isExpenseLiveData.value!! == 1
@@ -159,6 +160,7 @@ class HistoryDetailFragment
                     selectedIncomeCategory.value = categories
                     incomeCategorySelectedPos.value = position
                 }
+                else -> {}
             }
         }
     }
@@ -205,11 +207,6 @@ class HistoryDetailFragment
                     historyDetailViewModel.selectedIncomeCategory.value!!
                 }
                 val payments = historyDetailViewModel.selectedPayments.value?: Payments()
-                Log.d(TAG, "initBtn: values ${historyDetailViewModel.updateHistoryId.value}")
-                Log.d(TAG, "initBtn: values $price")
-                Log.d(TAG, "initBtn: values $description")
-                Log.d(TAG, "initBtn: values $categories")
-                Log.d(TAG, "initBtn: values $payments")
                 with(historyDetailViewModel){
                     if (isUpdateMode.value!!){
                         updateHistory(price, description, payments, categories)
@@ -243,7 +240,7 @@ class HistoryDetailFragment
 
     private fun initAppbar() {
         with(binding.historyDetailAppBar) {
-            appBarTitleTv.text = resources.getString(R.string.history_detail_app_bar_title)
+            mainViewModel.curAppbarTitle.value = resources.getString(R.string.history_detail_app_bar_title)
             appBarBackIv.setImageDrawable(
                 AppCompatResources.getDrawable(
                     requireContext(),
@@ -252,6 +249,7 @@ class HistoryDetailFragment
             )
             appBarRightIv.visibility = View.INVISIBLE
             appBarBackIv.setOnClickListener {
+                historyDetailViewModel.resetMemberProperties()
                 parentFragmentManager.popBackStack()
             }
         }
@@ -259,7 +257,7 @@ class HistoryDetailFragment
 
     override fun onDestroyView() {
         super.onDestroyView()
-        historyDetailViewModel.resetMemberProperties()
+        mainViewModel.setTitle(mainViewModel.curAppbarYear.value!!, mainViewModel.curAppbarMonth.value!!)
     }
 
 }

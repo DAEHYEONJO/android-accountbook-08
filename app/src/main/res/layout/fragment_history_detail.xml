@@ -5,6 +5,9 @@
 
     <data>
         <variable
+            name="mvm"
+            type="com.example.accountbook.presentation.viewmodel.MainViewModel" />
+        <variable
             name="viewModel"
             type="com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel" />
         <import type="android.view.View"/>
@@ -14,11 +17,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="@color/primary_off_white_100"
         tools:context=".presentation.history.HistoryDetailFragment">
 
         <include
             android:id="@+id/history_detail_app_bar"
             layout="@layout/app_bar_layout"
+            app:viewModel="@{mvm}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

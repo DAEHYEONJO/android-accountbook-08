@@ -69,7 +69,14 @@ class AccountBookDbHelper @Inject constructor(
         }
     }
 
-    fun insertCategory(categories: Categories): Boolean {
+    fun d(id: Int){
+        with(writableDatabase){
+            val sql = "DELETE FROM ${AccountBookPayments.TABLE_NAME} WHERE ${AccountBookPayments.COLUMN_NAME_ID} = $id"
+            execSQL(sql)
+        }
+    }
+
+    fun insertCategories(categories: Categories): Boolean {
         with(categories) {
             with(readableDatabase) {
                 val values = ContentValues().apply {

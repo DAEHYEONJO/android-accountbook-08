@@ -14,7 +14,7 @@
 
         <FrameLayout
             android:id="@+id/category_spinner_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/app_base_space_16"
             android:layout_marginStart="@dimen/app_base_space_16"
@@ -26,9 +26,10 @@
 
             <TextView
                 android:id="@+id/category_spinner_tv"
-                style="@style/Widget.TextView.KopubWorldDotumPro12_White100_Bold.Style"
+                style="@style/Widget.TextView.KopubWorldDotumPro10_White100_Bold.Style"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:layout_marginStart="@dimen/recycler_item_space_8"
                 android:layout_marginTop="@dimen/checkbox_space_4"
                 android:layout_marginEnd="@dimen/recycler_item_space_8"

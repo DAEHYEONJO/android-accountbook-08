@@ -6,6 +6,7 @@
     <string name="bottom_nav_statistics">통계</string>
     <string name="bottom_nav_setting">설정</string>
     <string name="app_bar_title">YYYY년 MM월</string>
+    <string name="app_bar_title_setting">설정</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="income_text">수입</string>
@@ -14,6 +15,7 @@
     <string name="history_empty_list">내역이 없습니다.</string>
     <string name="history_detail_app_bar_title">내역 등록</string>
     <string name="button_add">등록하기</string>
+    <string name="button_edit">수정하기</string>
     <string name="button_save">저장</string>
     <string name="total_text">총합</string>
     <string name="suffix_won">원</string>
@@ -27,5 +29,17 @@
     <string name="edit_text_hint_input">입력하세요</string>
     <string name="edit_text_hint_choose">선택하세요</string>
     <string name="statistics_total_expense_price">이번 달 총 지출 금액</string>
+    <string name="title_activity_test_compose">TestComposeActivity</string>
+
+    <string name="setting_detail_name">이름</string>
+    <string name="setting_detail_name_hint">입력하세요</string>
+    <string name="setting_detail_color">색상</string>
+    <string name="setting_detail_app_bar_title_payment_add">결제 수단 추가하기</string>
+    <string name="setting_detail_app_bar_title_income_category_add">수입 카테고리 추가하기</string>
+    <string name="setting_detail_app_bar_title_expense_category_add">지출 카테고리 추가하기</string>
+    <string name="setting_detail_app_bar_title_payment_edit">결제 수단 수정하기</string>
+    <string name="setting_detail_app_bar_title_income_category_edit">수입 카테고리 수정하기</string>
+    <string name="setting_detail_app_bar_title_expense_category_edit">지출 카테고리 수정하기</string>
+
 
 </resources>

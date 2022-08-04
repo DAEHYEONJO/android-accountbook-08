@@ -62,17 +62,19 @@ class HistoryFragment :
     }
 
     private fun initLayout() {
+        mainViewModel.setTitle(mainViewModel.curAppbarYear.value!!, mainViewModel.curAppbarMonth.value!!)
         with(binding.historyAppBarLayout) {
             appBarTitleTv.setOnClickListener {
-                AppBarBottomSheetFragment().show(
-                    childFragmentManager,
-                    AppBarBottomSheetFragment.TAG
-                )
+                if (!mainViewModel.isDeleteMode.value!!){
+                    AppBarBottomSheetFragment().show(
+                        childFragmentManager,
+                        AppBarBottomSheetFragment.TAG
+                    )
+                }
             }
             appBarBackIv.setOnClickListener {
                 if (mainViewModel.isDeleteMode.value!!) {
                     mainViewModel.resetDeleteModeProperties()
-                    // Todo check items -> no check
                     historyAdapter.currentList.map {
                         if (mainViewModel.selectedDeleteItems.value!!.contains(it.id)){
                             it.selected = false

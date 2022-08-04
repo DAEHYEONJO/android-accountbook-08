@@ -70,7 +70,7 @@ class CategorySpinnerAdapter @Inject constructor(
             }else if (position!=categoryList.size - 1){
                 categorySpinnerIv.visibility = View.INVISIBLE
             }else{
-                categorySpinnerTv.setTextAppearance(R.style.Widget_TextView_KopubWorldDotumPro12_Light_Purple100_Bold_TextAppearance)
+                categorySpinnerTv.setTextAppearance(R.style.Widget_TextView_KopubWorldDotumPro10_Light_Purple100_Bold_TextAppearance)
                 val layoutParams = (categorySpinnerLayout.layoutParams as ConstraintLayout.LayoutParams)
                 layoutParams.setMargins(0,dp16ToPx,0,dp16ToPx)
                 categorySpinnerLayout.layoutParams =layoutParams
