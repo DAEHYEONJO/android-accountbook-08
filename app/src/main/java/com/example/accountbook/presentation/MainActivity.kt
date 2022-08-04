@@ -13,7 +13,9 @@ import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
 import com.example.accountbook.databinding.ActivityMainBinding
 import com.example.accountbook.presentation.calendar.CalendarFragment
+import com.example.accountbook.presentation.history.HistoryDetailFragment
 import com.example.accountbook.presentation.history.HistoryFragment
+import com.example.accountbook.presentation.setting.SettingDetailFragment
 import com.example.accountbook.presentation.setting.SettingFragment
 import com.example.accountbook.presentation.statistics.StatisticsFragment
 import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
@@ -76,6 +78,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFragment(menuItemId: Int) {
         var fragment = supportFragmentManager.findFragmentByTag(menuItemId.toString())
+        Log.e(TAG, "setFragment: backstackCount: ${supportFragmentManager.backStackEntryCount}", )
+        supportFragmentManager.popBackStack()
         if (fragment == null){
             when(menuItemId){
                 R.id.bottom_nav_item_history -> fragment = HistoryFragment()
@@ -85,7 +89,9 @@ class MainActivity : AppCompatActivity() {
             }
         }else{
             when(menuItemId){
-                R.id.bottom_nav_item_history -> fragment as HistoryFragment
+                R.id.bottom_nav_item_history -> {
+                    fragment as HistoryFragment
+                }
                 R.id.bottom_nav_item_calendar -> fragment as CalendarFragment
                 R.id.bottom_nav_item_statistics -> fragment as StatisticsFragment
                 R.id.bottom_nav_item_setting -> fragment as SettingFragment
@@ -104,7 +110,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        historyDetailViewModel.resetMemberProperties()
+        with(supportFragmentManager){
+            if (backStackEntryCount!=2){
+                historyDetailViewModel.resetMemberProperties()
+            }else{
+                //popBackStack()
+            }
+            Log.e(TAG, "onBackPressed: $backStackEntryCount", )
+            Log.e(TAG, "onBackPressed: ${this.fragments}", )
+            if(this.fragments.first() !is HistoryFragment){
+                if (fragments.size==1 && fragments.last() !is HistoryDetailFragment && fragments.last() !is SettingDetailFragment){
+                    binding.mainBottomNavView.selectedItemId = R.id.bottom_nav_item_history
+                    setFragment(R.id.bottom_nav_item_history)
+                    return
+                }
+            }
+        }
         super.onBackPressed()
     }
 }

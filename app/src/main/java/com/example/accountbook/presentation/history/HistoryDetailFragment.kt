@@ -8,6 +8,7 @@ import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import com.example.accountbook.R
 import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
@@ -17,8 +18,10 @@ import com.example.accountbook.presentation.adapter.CategorySpinnerAdapter
 import com.example.accountbook.presentation.adapter.PaymentSpinnerAdapter
 import com.example.accountbook.presentation.base.BaseFragment
 import com.example.accountbook.presentation.bottomsheet.DatePickerBottomSheetFragment
+import com.example.accountbook.presentation.setting.SettingDetailFragment
 import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
 import com.example.accountbook.presentation.viewmodel.MainViewModel
+import com.example.accountbook.presentation.viewmodel.SettingViewModel
 import com.example.accountbook.utils.dpToPx
 import com.example.accountbook.utils.getCommaPriceString
 import com.example.accountbook.utils.toInt
@@ -33,6 +36,7 @@ class HistoryDetailFragment
 ) {
     private val mainViewModel: MainViewModel by activityViewModels()
     private val historyDetailViewModel: HistoryDetailViewModel by activityViewModels()
+    private val settingViewModel: SettingViewModel by activityViewModels()
     @Inject
     lateinit var paymentSpinnerAdapter: PaymentSpinnerAdapter
     @Inject
@@ -94,9 +98,6 @@ class HistoryDetailFragment
     private fun initObserver() {
         with(historyDetailViewModel) {
             spinnerPaymentsList.observe(viewLifecycleOwner) {
-                it.forEach {
-                    Log.e(TAG, "initObserver: $it")
-                }
                 paymentSpinnerAdapter.paymentList = it
                 paymentSpinnerAdapter.notifyDataSetChanged()
             }
@@ -122,6 +123,28 @@ class HistoryDetailFragment
         }
     }
 
+    private fun fragmentTransaction() {
+        parentFragmentManager.commit {
+            var fragment =
+                parentFragmentManager.findFragmentByTag(SettingDetailFragment::class.simpleName)
+            addToBackStack(null)
+            fragment = if (fragment == null) {
+                SettingDetailFragment()
+            } else {
+                fragment as SettingDetailFragment
+            }
+            replace(
+                R.id.main_fragment_container_view,
+                fragment,
+                SettingDetailFragment::class.simpleName,
+            )
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     private fun initPaymentSpinner() {
         with(binding.historyDetailPaymentSpinner) {
             setSpinnerEventsListener(spinnerEventsListener)
@@ -136,10 +159,26 @@ class HistoryDetailFragment
                     id: Long
                 ) {
                     with(historyDetailViewModel) {
-                        isPaymentEntered.value =
-                            position != 0 && position != paymentSpinnerAdapter.paymentList.size - 1
-                        paymentSelectedPos.value = position
-                        selectedPayments.value = (p0!!.selectedItem as Payments)
+                        Log.e(TAG, "onItemSelected: payment spinner: $position ${p0!!.selectedItem as Payments}")
+                        if (position == paymentSpinnerAdapter.paymentList.size-1){
+                            fragmentTransaction()
+                            addPaymentState.value = true
+                            with(settingViewModel){
+                                setProperties(
+                                    title = resources.getString(R.string.setting_detail_app_bar_title_payment_add),
+                                    name = "",
+                                    updateMode = false,
+                                    paymentMode = true,
+                                    expenseMode= false,
+                                )
+                            }
+                        }else{
+                            isPaymentEntered.value =
+                                position != 0 && position != paymentSpinnerAdapter.paymentList.size - 1
+                            paymentSelectedPos.value = position
+                            selectedPayments.value = (p0!!.selectedItem as Payments)
+                        }
+
                     }
                 }
 
@@ -178,9 +217,29 @@ class HistoryDetailFragment
                     position: Int,
                     id: Long
                 ) {
-                    setSpinnerSelectedPos(position, p0!!.selectedItem as Categories)
-                    historyDetailViewModel.isCategoryEntered.value =
-                        position != 0 && position != categorySpinnerAdapter.categoryList.size - 1
+                    with(historyDetailViewModel){
+                        if (position == categorySpinnerAdapter.categoryList.size-1){
+                            fragmentTransaction()
+                            addCategoryState.value = true
+                            with(settingViewModel){
+                                setProperties(
+                                    title = if (historyDetailViewModel.isExpenseChecked.value!!)
+                                        resources.getString(R.string.setting_detail_app_bar_title_expense_category_add)
+                                    else resources.getString(R.string.setting_detail_app_bar_title_income_category_add),
+                                    name = "",
+                                    updateMode = false,
+                                    paymentMode = false,
+                                    expenseMode= historyDetailViewModel.isExpenseChecked.value!!
+                                )
+                                categoryFromExpense.value = historyDetailViewModel.isExpenseChecked.value!!
+                            }
+                        }else{
+                            Log.e(TAG, "onItemSelected: category spinner: $position ${p0!!.selectedItem as Categories}", )
+                            setSpinnerSelectedPos(position, p0!!.selectedItem as Categories)
+                            historyDetailViewModel.isCategoryEntered.value =
+                                position != 0 && position != categorySpinnerAdapter.categoryList.size - 1
+                        }
+                    }
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {

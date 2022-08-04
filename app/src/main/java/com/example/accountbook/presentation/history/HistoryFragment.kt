@@ -34,6 +34,9 @@ class HistoryFragment :
         initRecyclerView()
         initObserver()
         initFab()
+        parentFragmentManager.fragments.forEach {
+            Log.e(TAG, "onViewCreated: $it", )
+        }
     }
 
 
@@ -56,8 +59,9 @@ class HistoryFragment :
             replace(
                 R.id.main_fragment_container_view,
                 fragment,
-                HistoryDetailFragment::class.simpleName
+                HistoryDetailFragment::class.simpleName,
             )
+            setReorderingAllowed(true)
         }
     }
 

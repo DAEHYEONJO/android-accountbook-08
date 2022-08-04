@@ -54,7 +54,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             }
             calendarViewModel.calendarItemList.observe(viewLifecycleOwner){ calendarItemList ->
                 calendarItemList!!.forEach {
-                    Log.d(TAG, "initObserver: $it")
                     calendarAdapter.dayList = calendarItemList
                     calendarAdapter.notifyDataSetChanged()
                 }
