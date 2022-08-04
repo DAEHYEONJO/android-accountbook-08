@@ -43,12 +43,12 @@ class PaymentSpinnerAdapter @Inject constructor(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding = SpinnerViewItemBinding.inflate(LayoutInflater.from(context), parent, false)
         Log.e(TAG, "getView: ${paymentList[position].payment}", )
-        val textAppearanceResId = if (position != 0) R.style.Widget_TextView_KopubWorldDotumPro14_Purple100_Bold_TextAppearance
+        val textAppearanceResId = if (position != 0&& position!=paymentList.size-1) R.style.Widget_TextView_KopubWorldDotumPro14_Purple100_Bold_TextAppearance
         else R.style.Widget_TextView_KopubWorldDotumPro14_Light_Purple100_Bold_TextAppearance
 
         with(binding.paymentSpinnerViewTv){
             setTextAppearance(textAppearanceResId)
-            text = paymentList[position].payment
+            if (position!=paymentList.size-1) text = paymentList[position].payment
         }
         return binding.root
     }

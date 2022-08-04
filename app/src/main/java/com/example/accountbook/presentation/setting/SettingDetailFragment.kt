@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.compose.runtime.invalidateGroupsWithKey
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,7 @@ import com.example.accountbook.databinding.FragmentSettingDetailBinding
 import com.example.accountbook.presentation.ColorItem
 import com.example.accountbook.presentation.adapter.SettingColorAdapter
 import com.example.accountbook.presentation.base.BaseFragment
+import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
 import com.example.accountbook.presentation.viewmodel.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -29,6 +31,7 @@ class SettingDetailFragment :
     ) {
 
     private val settingViewModel: SettingViewModel by activityViewModels()
+    private val historyDetailViewModel: HistoryDetailViewModel by activityViewModels()
 
     @Inject
     lateinit var settingColorAdapter: SettingColorAdapter
@@ -40,89 +43,9 @@ class SettingDetailFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = settingViewModel
-        initQueryResult()
         initColorProperties()
         initLayout()
         initObserver()
-        initBtn()
-    }
-
-    private fun initQueryResult() {
-        lifecycleScope.launch {
-            with(settingViewModel){
-                isInsertCategoriesSuccess.collectLatest {
-                    Log.e(TAG, "initQueryResult: categorySuccess: $it" , )
-                }
-                isInsertPaymentSuccess.collectLatest {
-                    Log.e(TAG, "initQueryResult: paymentSuccess: $it" , )
-                }
-            }
-        }
-    }
-
-    private fun initBtn() {
-       binding.settingDetailAddBtn.setOnClickListener {
-           with(settingViewModel){
-               if (!isUpdateMode.value!!){ // 추가모드
-                   if (isPaymentMode.value!!){ // payment 추가 모드
-                       insertPayments(
-                           Payments(payment = binding.settingDetailNameEt.text.toString())
-                       )
-                   }else if (isExpenseMode.value!!){ // 지출 카테고리 추가 모드
-                       val intColor = expenseColorList[selectedExpenseColorPos.value!!].color
-                       val labelColor = String.format("#%06X", 0xFFFFFF and intColor)
-                       insertCategories(
-                           Categories(
-                               category = binding.settingDetailNameEt.text.toString(),
-                               labelColor = labelColor,
-                               isExpense = 1
-                           )
-                       )
-                   }else{ // 수입 카테고리 추가 모드 
-                       val intColor = incomeColorList[selectedIncomeColorPos.value!!].color
-                       val labelColor = String.format("#%06X", 0xFFFFFF and intColor)
-                       insertCategories(
-                           Categories(
-                               category = binding.settingDetailNameEt.text.toString(),
-                               labelColor = labelColor,
-                               isExpense = 0
-                           )
-                       )
-                   }
-               }else{ // 업데이트 모드
-                   if (isPaymentMode.value!!){ // payment 업뎃 모드
-                       updatePayments(
-                           Payments(
-                               paymentId = curPaymentId.value!!,
-                               payment = binding.settingDetailNameEt.text.toString()
-                           )
-                       )
-                   }else if (isExpenseMode.value!!){ // 지출 카테고리 업뎃 모드
-                       val intColor = expenseColorList[selectedExpenseColorPos.value!!].color
-                       val labelColor = String.format("#%06X", 0xFFFFFF and intColor)
-                       updateCategories(
-                           Categories(
-                               categoryId = curCategoryId.value!!,
-                               category = binding.settingDetailNameEt.text.toString(),
-                               labelColor = labelColor,
-                               isExpense = 1
-                           )
-                       )
-                   }else{ // 수입 카테고리 업뎃 모드
-                       val intColor = incomeColorList[selectedIncomeColorPos.value!!].color
-                       val labelColor = String.format("#%06X", 0xFFFFFF and intColor)
-                       updateCategories(
-                           Categories(
-                               categoryId = curCategoryId.value!!,
-                               category = binding.settingDetailNameEt.text.toString(),
-                               labelColor = labelColor,
-                               isExpense = 0
-                           )
-                       )
-                   }
-               }
-           }
-       }
     }
 
     private fun initColorList(){
@@ -195,6 +118,7 @@ class SettingDetailFragment :
     private fun initLayout() {
         with(binding) {
             settingDetailAppBarBackIv.setOnClickListener {
+                Log.e(TAG, "initLayout: ${parentFragmentManager.fragments}", )
                 parentFragmentManager.popBackStack()
                 settingViewModel.resetProperties()
             }
@@ -217,8 +141,75 @@ class SettingDetailFragment :
                 }
             }
             settingDetailAddBtn.setOnClickListener {
-
+                with(settingViewModel){
+                    if (!isUpdateMode.value!!){ // 추가모드
+                        if (isPaymentMode.value!!){ // payment 추가 모드
+                            insertPayments(
+                                Payments(payment = binding.settingDetailNameEt.text.toString())
+                            )
+                        }else if (isExpenseMode.value!!){ // 지출 카테고리 추가 모드
+                            val intColor = expenseColorList[selectedExpenseColorPos.value!!].color
+                            val labelColor = String.format("#%06X", 0xFFFFFF and intColor)
+                            insertCategories(
+                                Categories(
+                                    category = binding.settingDetailNameEt.text.toString(),
+                                    labelColor = labelColor,
+                                    isExpense = 1
+                                )
+                            )
+                        }else{ // 수입 카테고리 추가 모드
+                            val intColor = incomeColorList[selectedIncomeColorPos.value!!].color
+                            val labelColor = String.format("#%06X", 0xFFFFFF and intColor)
+                            insertCategories(
+                                Categories(
+                                    category = binding.settingDetailNameEt.text.toString(),
+                                    labelColor = labelColor,
+                                    isExpense = 0
+                                )
+                            )
+                        }
+                    }else{ // 업데이트 모드
+                        if (isPaymentMode.value!!){ // payment 업뎃 모드
+                            updatePayments(
+                                Payments(
+                                    paymentId = curPaymentId.value!!,
+                                    payment = binding.settingDetailNameEt.text.toString()
+                                )
+                            )
+                        }else if (isExpenseMode.value!!){ // 지출 카테고리 업뎃 모드
+                            val intColor = expenseColorList[selectedExpenseColorPos.value!!].color
+                            val labelColor = String.format("#%06X", 0xFFFFFF and intColor)
+                            updateCategories(
+                                Categories(
+                                    categoryId = curCategoryId.value!!,
+                                    category = binding.settingDetailNameEt.text.toString(),
+                                    labelColor = labelColor,
+                                    isExpense = 1
+                                )
+                            )
+                        }else{ // 수입 카테고리 업뎃 모드
+                            val intColor = incomeColorList[selectedIncomeColorPos.value!!].color
+                            val labelColor = String.format("#%06X", 0xFFFFFF and intColor)
+                            updateCategories(
+                                Categories(
+                                    categoryId = curCategoryId.value!!,
+                                    category = binding.settingDetailNameEt.text.toString(),
+                                    labelColor = labelColor,
+                                    isExpense = 0
+                                )
+                            )
+                        }
+                    }
+                    isButtonEnabled.value = false
+                    parentFragmentManager.popBackStack()
+                    settingViewModel.resetProperties()
+                }
             }
         }
+    }
+
+    override fun onDestroyView() {
+
+        super.onDestroyView()
     }
 }

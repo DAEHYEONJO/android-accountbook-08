@@ -50,12 +50,12 @@ class CategorySpinnerAdapter @Inject constructor(
         Log.e(TAG, "getView: ${categoryList}", )
         Log.e(TAG, "getView: ${position}", )
         Log.e(TAG, "getView: ${categoryList[position].category}", )
-        val textAppearanceResId = if (position != 0) R.style.Widget_TextView_KopubWorldDotumPro14_Purple100_Bold_TextAppearance
+        val textAppearanceResId = if (position != 0 && position!=categoryList.size-1) R.style.Widget_TextView_KopubWorldDotumPro14_Purple100_Bold_TextAppearance
         else R.style.Widget_TextView_KopubWorldDotumPro14_Light_Purple100_Bold_TextAppearance
 
         with(binding.paymentSpinnerViewTv){
             setTextAppearance(textAppearanceResId)
-            text = categoryList[position].category
+            if (position!=categoryList.size-1) text = categoryList[position].category
         }
         return binding.root
     }

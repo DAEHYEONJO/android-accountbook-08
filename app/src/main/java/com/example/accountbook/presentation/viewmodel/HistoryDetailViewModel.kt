@@ -147,6 +147,10 @@ class HistoryDetailViewModel @Inject constructor(
         resetMemberProperties()
     }
 
+    val addPaymentState = MutableLiveData(false)
+    val addCategoryState = MutableLiveData(false)
+    val categoryFromExpense = MutableLiveData(false)
+
     fun setMemberProperties(historyListItem: HistoriesListItem){
         with(historyListItem){
             val (year, month, day) = dateToYearMonthDay(date!!)

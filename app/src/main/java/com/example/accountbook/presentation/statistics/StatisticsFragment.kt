@@ -58,7 +58,6 @@ class StatisticsFragment :
     private fun initObserver() {
         with(mainViewModel) {
             curAppbarTitle.observe(viewLifecycleOwner) { title ->
-                Log.e(TAG, "initObserver: $title")
                 setTotalPrice()
                 val (start, end) = getStartEndLongValue()
                 statisticsViewModel.getStatisticsItemList(start = start, end = end)
@@ -66,14 +65,12 @@ class StatisticsFragment :
         }
         with(statisticsViewModel) {
             statisticsItem.observe(viewLifecycleOwner) { statisticsItemList ->
-                statisticsItemList!!.forEach {
-                    Log.e(TAG, "initObserver: $it")
-                }
+
                 statisticsAdapter.apply {
-                    this.statisticsItemList = statisticsItemList
+                    this.statisticsItemList = statisticsItemList!!
                     notifyDataSetChanged()
                 }
-                initPieChart(statisticsItemList)
+                initPieChart(statisticsItemList!!)
             }
         }
     }
