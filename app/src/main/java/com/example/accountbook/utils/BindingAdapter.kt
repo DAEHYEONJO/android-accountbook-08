@@ -1,8 +1,6 @@
 package com.example.accountbook.utils
 
 import android.graphics.Color
-import android.util.Log
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -10,8 +8,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.example.accountbook.R
-import org.w3c.dom.Text
-import java.time.Year
 import java.util.*
 
 @BindingAdapter("app:setBackgroundSyncWithToggleBtn")
@@ -49,8 +45,6 @@ fun TextView.stringToYyyyMdEEString(year: Int, month: Int, day: Int){
 @BindingAdapter("app:setCategoryBackground")
 fun FrameLayout.setCategoryBackground(colorString: String){
     val originDrawable = ContextCompat.getDrawable(this.context, R.drawable.category_background_999)
-    Log.e("bbb", "setCategoryBackground: ${colorString}", )
-    Log.e("bbb", "setCategoryBackground: ${Color.parseColor(colorString)}", )
     originDrawable!!.setTint(Color.parseColor(colorString))
     background = originDrawable
 }
@@ -65,7 +59,6 @@ fun TextView.setPriceStyleText(isExpense: Int, price: Long, suffix: String = "")
         "${getCommaPriceString(price)}$suffix"
     }
 }
-
 
 @BindingAdapter("app:changeButtonBackground")
 fun AppCompatButton.changeButtonBackground(isButtonEnabled: Boolean){

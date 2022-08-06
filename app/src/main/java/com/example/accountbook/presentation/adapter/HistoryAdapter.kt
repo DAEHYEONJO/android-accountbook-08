@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.accountbook.R
 import com.example.accountbook.databinding.HistoryBodyItemBinding
 import com.example.accountbook.databinding.HistoryHeaderItemBinding
 import com.example.accountbook.domain.model.HEADER

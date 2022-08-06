@@ -1,5 +1,8 @@
 package com.example.accountbook.data.repository
 
+import com.example.accountbook.data.datasource.CategoryDataSource
+import com.example.accountbook.data.datasource.HistoryDataSource
+import com.example.accountbook.data.datasource.PaymentDataSource
 import com.example.accountbook.data.db.AccountBookDbHelper
 import com.example.accountbook.data.mapper.DomainToPresenterMapper
 import com.example.accountbook.data.mapper.PresenterToDomainMapper
@@ -19,7 +22,9 @@ import kotlin.collections.HashMap
 
 @Singleton
 class AccountRepositoryImpl @Inject constructor(
-    private val dbHelper: AccountBookDbHelper,
+    private val historyDataSource: HistoryDataSource,
+    private val categoryDataSource: CategoryDataSource,
+    private val paymentDataSource: PaymentDataSource,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
     private val presenterToDomainMapper: PresenterToDomainMapper,
     private val domainToPresenterMapper: DomainToPresenterMapper
@@ -35,49 +40,43 @@ class AccountRepositoryImpl @Inject constructor(
         end: Long
     ): HistoriesTotalData {
         return withContext(dispatcher) {
-            dbHelper.getHistoriesTotalData(isExpense, start, end)
+            historyDataSource.getHistoriesTotalData(isExpense, start, end)
         }
     }
 
     override suspend fun getAllCategories(isExpense: Int): List<Categories> {
         return withContext(dispatcher) {
-            dbHelper.getAllCategories(isExpense)
+            categoryDataSource.getAllCategories(isExpense)
         }
     }
 
     override suspend fun getAllPayments(): List<Payments> {
         return withContext(dispatcher) {
-            dbHelper.getAllPayments()
-        }
-    }
-
-    override suspend fun deleteAll(tableName: String) {
-        withContext(dispatcher) {
-            dbHelper.deleteAll(tableName)
+            paymentDataSource.getAllPayments()
         }
     }
 
     override suspend fun getSumPrice(isExpense: Int, start: Long, end: Long): Long {
         return withContext(dispatcher) {
-            dbHelper.getSumPrice(isExpense, start, end)
+            historyDataSource.getSumPrice(isExpense, start, end)
         }
     }
 
     override suspend fun insertHistory(historiesListItem: HistoriesListItem) {
         withContext(dispatcher) {
-            dbHelper.insertHistory(presenterToDomainMapper.getHistories(historiesListItem))
+            historyDataSource.insertHistory(presenterToDomainMapper.getHistories(historiesListItem))
         }
     }
 
     override suspend fun updateHistory(historiesListItem: HistoriesListItem) {
         withContext(dispatcher) {
-            dbHelper.updateHistory(presenterToDomainMapper.getHistories(historiesListItem))
+            historyDataSource.updateHistory(presenterToDomainMapper.getHistories(historiesListItem))
         }
     }
 
     override suspend fun deleteHistory(id: Int) {
         withContext(dispatcher) {
-            dbHelper.deleteHistory(id)
+            historyDataSource.deleteHistory(id)
         }
     }
 
@@ -87,7 +86,7 @@ class AccountRepositoryImpl @Inject constructor(
         end: Long
     ): HashMap<String, CalendarItem> {
         return withContext(dispatcher) {
-            dbHelper.getHistoriesTotalDataGroupByDay(
+            historyDataSource.getHistoriesTotalDataGroupByDay(
                 isExpense, start, end
             )
         }
@@ -99,32 +98,32 @@ class AccountRepositoryImpl @Inject constructor(
         end: Long
     ): List<StatisticsItem> {
         return withContext(dispatcher) {
-            dbHelper.getHistoriesList(isExpense, start, end)
+            historyDataSource.getHistoriesList(isExpense, start, end)
                 .map { domainToPresenterMapper.getStatisticsItem(it) }
         }
     }
 
     override suspend fun insertPayments(payments: Payments): Boolean {
         return withContext(dispatcher){
-            dbHelper.insertPayment(payments)
+            paymentDataSource.insertPayment(payments)
         }
     }
 
     override suspend fun insertCategories(categories: Categories): Boolean {
         return withContext(dispatcher){
-            dbHelper.insertCategories(categories)
+            categoryDataSource.insertCategories(categories)
         }
     }
 
     override suspend fun updateCategories(categories: Categories) {
         return withContext(dispatcher){
-            dbHelper.updateCategory(categories)
+            categoryDataSource.updateCategory(categories)
         }
     }
 
     override suspend fun updatePayments(payments: Payments) {
         return withContext(dispatcher){
-            dbHelper.updatePayment(payments)
+            paymentDataSource.updatePayment(payments)
         }
     }
 }

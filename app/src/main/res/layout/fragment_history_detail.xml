@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/app_base_space_16"
                 android:text="@string/history_detail_payment" />
-            <com.example.accountbook.presentation.CustomSpinner
+            <com.example.accountbook.presentation.ui.CustomSpinner
                 android:id="@+id/history_detail_payment_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -186,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/app_base_space_16"
                 android:text="@string/history_detail_category" />
-            <com.example.accountbook.presentation.CustomSpinner
+            <com.example.accountbook.presentation.ui.CustomSpinner
                 android:id="@+id/history_detail_category_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

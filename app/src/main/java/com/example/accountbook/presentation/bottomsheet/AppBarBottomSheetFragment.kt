@@ -1,12 +1,9 @@
 package com.example.accountbook.presentation.bottomsheet
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
 import com.example.accountbook.R
 import com.example.accountbook.databinding.FragmentAppBarBottomSheetBinding
@@ -17,9 +14,6 @@ import com.example.accountbook.utils.MIN_MONTH
 import com.example.accountbook.utils.MIN_YEAR
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.FragmentScoped
-import java.util.*
-import javax.inject.Singleton
 
 @AndroidEntryPoint
 class AppBarBottomSheetFragment : BottomSheetDialogFragment() {

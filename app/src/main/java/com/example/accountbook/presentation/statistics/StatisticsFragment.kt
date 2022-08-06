@@ -2,7 +2,6 @@ package com.example.accountbook.presentation.statistics
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels

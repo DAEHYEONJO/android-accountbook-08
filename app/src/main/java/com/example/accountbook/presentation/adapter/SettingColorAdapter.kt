@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.accountbook.databinding.SettingColorItemBinding
-import com.example.accountbook.presentation.ColorItem
+import com.example.accountbook.presentation.model.ColorItem
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -4,7 +4,6 @@ import com.example.accountbook.domain.model.StatisticsItem
 import com.example.accountbook.domain.repository.AccountRepository
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.ceil
 import kotlin.math.round
 
 @Singleton

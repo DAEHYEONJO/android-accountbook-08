@@ -2,21 +2,15 @@ package com.example.accountbook.presentation.bottomsheet
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import androidx.core.view.marginBottom
 import androidx.fragment.app.activityViewModels
 import com.example.accountbook.R
-import com.example.accountbook.databinding.FragmentAppBarBottomSheetBinding
 import com.example.accountbook.databinding.FragmentDatePickerBottomSheetBinding
 import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
-import com.example.accountbook.presentation.viewmodel.MainViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
