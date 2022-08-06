@@ -82,6 +82,101 @@ val isExpenseLiveData = combine(historyIncomeChecked.asFlow(), historyExpenseChe
 * 하지만 Index 자료구조 설계시 해당 PK를 Text Type으로 두게 되면 메모리 낭비가 상대적으로 더 된다는 점이 있다.
 * 그리고 Int비교와 String 비교를 하게되면 Int를 비교하는것이 빠르기 때문이다.
 
+# Spinner Arrow Drawable 상태 관리법
+
+## 문제되었던 내용
+
+<aside>
+💡 window_state flag로 Spinner의 Arrow Drawable 상태를 관리하니
+</aside>
+
+<aside>
+💡 두개의 Spinner 모두 함께 터치여부와 상관없이 아이콘이 변경되었다.
+</aside>
+
+## 해결방법
+
+- performClick method 호출 → openInitiated 상태변수 true로 초기화
+- onWindowFocusChanged 호출
+    - 처음누른경우, n번 누른 경우 모두 호출되는 메소드다.
+    - 따라서 openInitiated값이 true인 경우에만 close icon으로 바꿔주는 작업을 진행했다.
+
+### CustomView 소스코드
+
+```kotlin
+private var openInitiated = false
+override fun performClick(): Boolean {
+    openInitiated = true
+    onSpinnerEventsListener?.onPopupWindowOpened(this)
+    return super.performClick()
+}
+
+override fun onWindowFocusChanged(hasFocus: Boolean) {
+    if (openInitiated && hasFocus) {
+        performClosedEvent()
+    }
+}
+
+private fun performClosedEvent() {
+    openInitiated = false
+    onSpinnerEventsListener?.onPopupWindowClosed(this)
+}
+```
+
+### Listener 구현부
+
+```kotlin
+private val spinnerEventsListener = object : CustomSpinner.OnSpinnerEventsListener {
+    override fun onPopupWindowOpened(spinner: Spinner?) {
+        spinner!!.background = AppCompatResources.getDrawable(
+            requireContext(),
+            R.drawable.spinner_arrow_up_background
+        )
+    }
+
+    override fun onPopupWindowClosed(spinner: Spinner?) {
+        spinner!!.background = AppCompatResources.getDrawable(
+            requireContext(),
+            R.drawable.spinner_arrow_down_background
+        )
+    }
+}
+```
+
+# Compose LazyColumn Issue
+
+![image](https://user-images.githubusercontent.com/68371979/183242114-ba593e55-17ba-47f4-92e5-6b730a021f6d.png)
+
+## 문제 원인
+
+- Lazy Column 특성상 Item이 추가될 수 있도록, 스크롤되고, 공간을 계속 그려나가는 방식으로 View가 그려지는것 같다.
+- Bottom Navigation의 위치는 스크롤되는 화면 이전 기준으로 위치가 측정 되었을 것이다.
+- 따라서, Lazy Column이 Bottom Navigation의 높이만큼 잘린 것으로 추정하였음
+
+## 해결 방법
+
+<aside>
+💡 Bottom Navigation View가 배치될 때, width를 측정하고, LazyColumn의 Padding만큼 부여하여 문제 해결
+
+</aside>
+
+```kotlin
+binding.mainBottomNavView.doOnLayout {
+   settingViewModel.bottomNavigationHeight = it.height
+}
+
+LazyColumn(
+    modifier = Modifier
+        .fillMaxSize()
+        .background(PrimaryOffWhite),
+    contentPadding = PaddingValues(
+        bottom = pxToDp(
+            settingViewModel.bottomNavigationHeight
+        ).dp
+    )
+)
+```
+
 # Branch List
 ### main
 * 금요일 코드 프리징을 위한 branch 입니다.
