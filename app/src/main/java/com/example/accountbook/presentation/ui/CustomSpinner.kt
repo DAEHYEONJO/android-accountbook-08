@@ -1,10 +1,9 @@
-package com.example.accountbook.presentation
+package com.example.accountbook.presentation.ui
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.Spinner
 import androidx.appcompat.widget.AppCompatSpinner
-
 
 class CustomSpinner : AppCompatSpinner {
     interface OnSpinnerEventsListener {

@@ -1,4 +1,4 @@
-package com.example.accountbook.presentation
+package com.example.accountbook.presentation.model
 
 data class ColorItem(
     val color: Int,

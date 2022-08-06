@@ -2,7 +2,6 @@ package com.example.accountbook.presentation.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import com.example.accountbook.utils.dpToPx
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @FragmentScoped
 class PaymentSpinnerAdapter @Inject constructor(
@@ -42,7 +40,6 @@ class PaymentSpinnerAdapter @Inject constructor(
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val binding = SpinnerViewItemBinding.inflate(LayoutInflater.from(context), parent, false)
-        Log.e(TAG, "getView: ${paymentList[position].payment}", )
         val textAppearanceResId = if (position != 0&& position!=paymentList.size-1) R.style.Widget_TextView_KopubWorldDotumPro14_Purple100_Bold_TextAppearance
         else R.style.Widget_TextView_KopubWorldDotumPro14_Light_Purple100_Bold_TextAppearance
 

@@ -2,26 +2,20 @@ package com.example.accountbook.presentation.setting
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.compose.runtime.invalidateGroupsWithKey
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import com.example.accountbook.R
 import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
 import com.example.accountbook.databinding.FragmentSettingDetailBinding
-import com.example.accountbook.presentation.ColorItem
+import com.example.accountbook.presentation.model.ColorItem
 import com.example.accountbook.presentation.adapter.SettingColorAdapter
 import com.example.accountbook.presentation.base.BaseFragment
 import com.example.accountbook.presentation.viewmodel.HistoryDetailViewModel
 import com.example.accountbook.presentation.viewmodel.SettingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @AndroidEntryPoint
 class SettingDetailFragment :
@@ -118,7 +112,6 @@ class SettingDetailFragment :
     private fun initLayout() {
         with(binding) {
             settingDetailAppBarBackIv.setOnClickListener {
-                Log.e(TAG, "initLayout: ${parentFragmentManager.fragments}", )
                 parentFragmentManager.popBackStack()
                 settingViewModel.resetProperties()
             }

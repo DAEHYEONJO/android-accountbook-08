@@ -67,7 +67,6 @@ class CalendarItemListUseCase @Inject constructor(private val repository: Accoun
             with(calendarItem){
                 val dayString = "${this.year} ${this.month} ${this.day}"
                 if (dayHashMap.containsKey(dayString)){
-                    Log.e(AccountRepositoryImpl.TAG, "getCalendarItems: yes", )
                     val curCalendarItem = dayHashMap[dayString]
                     incomePrice = curCalendarItem!!.incomePrice
                     expensePrice = curCalendarItem.expensePrice

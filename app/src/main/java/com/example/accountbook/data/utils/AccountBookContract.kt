@@ -6,7 +6,6 @@ object AccountBookContract {
     const val DB_VERSION = 1
     const val SQL_DELETE_BASE_QUERY = "DROP TABLE IF EXISTS"
     const val SQL_ACTIVE_FOREIGN_KEY = "PRAGMA foreign_keys = 1"
-    const val ASC = "ASC"
     const val DESC = "DESC"
 
     fun getSumPriceSqlWhere(isExpense: Int, start: Long, end: Long) = "SELECT SUM(${AccountBookHistories.COLUMN_NAME_PRICE}) FROM ${AccountBookHistories.TABLE_NAME} " +
@@ -14,15 +13,15 @@ object AccountBookContract {
             "AND ${AccountBookHistories.COLUMN_NAME_DATE} BETWEEN $start AND $end"
     fun getDeleteAllSql(tableName: String) = "DELETE FROM $tableName"
     fun getSelectAllSql(tableName: String) = "SELECT * FROM $tableName"
-    fun getSelectAllSqlWhereOrderBy(
-        tableName: String,
+    fun getSelectAllSqlJoin(
         colName: String,
         order: String,
         where: String,
         start: Long,
         end: Long
-    ) = "SELECT * FROM $tableName WHERE $where BETWEEN $start AND $end ORDER BY $colName $order"
-
+    ) = "SELECT * FROM ${AccountBookHistories.TABLE_NAME} NATURAL JOIN " +
+            "${AccountBookCategories.TABLE_NAME} NATURAL JOIN " +
+            "${AccountBookPayments.TABLE_NAME} WHERE $where BETWEEN $start AND $end ORDER BY $colName $order"
 }
 
 object AccountBookHistories {
@@ -52,20 +51,11 @@ object AccountBookPayments {
     const val TABLE_NAME = "Payments"
     const val COLUMN_NAME_ID = "payment_id"
     const val COLUMN_NAME_PAYMENT = "payment"
-    const val SQL_CREATE_TABLE = "CREATE TABLE $TABLE_NAME (" +
-            "$COLUMN_NAME_ID INTEGER NOT NULL," +
-            "$COLUMN_NAME_PAYMENT TEXT NOT NULL," +
-            "PRIMARY KEY($COLUMN_NAME_ID)" +
-            ");"
     const val SQL_CREATE_TABLE_PAYMENT_UNIQUE = "CREATE TABLE $TABLE_NAME (" +
             "$COLUMN_NAME_ID INTEGER NOT NULL," +
             "$COLUMN_NAME_PAYMENT TEXT NOT NULL UNIQUE," +
             "PRIMARY KEY($COLUMN_NAME_ID)" +
             ");"
-
-    //fun getPaymentCountSql(payment: String) = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_PAYMENT = $payment;"
-    const val SQL_SELECT_BY_PAYMENT_QUERY =
-        "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_PAYMENT = ?"
     const val SQL_SELECT_BY_ID_QUERY = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_ID = ?"
     const val SQL_CREATE_INDEX = "CREATE INDEX payment_id_index ON $TABLE_NAME($COLUMN_NAME_ID);"
 }
@@ -76,13 +66,6 @@ object AccountBookCategories {
     const val COLUMN_NAME_CATEGORY = "category"
     const val COLUMN_NAME_IS_EXPENSE = "is_expense"
     const val COLUMN_NAME_LABEL_COLOR = "label_color"
-    const val SQL_CREATE_TABLE = "CREATE TABLE $TABLE_NAME (" +
-            "$COLUMN_NAME_ID INTEGER NOT NULL, " +
-            "$COLUMN_NAME_LABEL_COLOR TEXT NOT NULL, " +
-            "$COLUMN_NAME_CATEGORY TEXT NOT NULL, " +
-            "$COLUMN_NAME_IS_EXPENSE INTEGER NOT NULL, " +
-            "PRIMARY KEY ($COLUMN_NAME_ID)" +
-            ");"
     const val SQL_CREATE_TABLE_CATEGORY_UNIQUE = "CREATE TABLE $TABLE_NAME (" +
             "$COLUMN_NAME_ID INTEGER NOT NULL, " +
             "$COLUMN_NAME_LABEL_COLOR TEXT NOT NULL, " +
@@ -91,8 +74,6 @@ object AccountBookCategories {
             "PRIMARY KEY ($COLUMN_NAME_ID)" +
             ");"
     fun getSelectSqlWhereIsExpense(isExpense: Int) = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_IS_EXPENSE = $isExpense"
-    const val SQL_SELECT_BY_CATEGORY_QUERY =
-        "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_CATEGORY = ?"
     const val SQL_SELECT_BY_ID_QUERY = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_NAME_ID = ?"
     const val SQL_CREATE_INDEX = "CREATE INDEX category_id_index ON $TABLE_NAME($COLUMN_NAME_ID);"
 }

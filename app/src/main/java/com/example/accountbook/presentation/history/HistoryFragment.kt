@@ -34,14 +34,12 @@ class HistoryFragment :
         initRecyclerView()
         initObserver()
         initFab()
-        parentFragmentManager.fragments.forEach {
-            Log.e(TAG, "onViewCreated: $it", )
-        }
     }
 
 
     private fun initFab() {
         binding.historyAddFab.setOnClickListener {
+            historyDetailViewModel.isExpenseChecked.value = mainViewModel.isExpenseLiveData.value!! == 1
             fragmentTransaction()
         }
     }
@@ -160,7 +158,6 @@ class HistoryFragment :
     private fun initObserver() {
         with(mainViewModel) {
             isExpenseLiveData.observe(viewLifecycleOwner) { isExpense ->
-                Log.e(TAG, "isExpenseLiveData: ")
                 mainViewModel.getHistoriesTotalData(isExpense)
             }
             historiesTotalData.observe(viewLifecycleOwner) { it ->
@@ -168,7 +165,7 @@ class HistoryFragment :
                     isDeleteMode.value?.let { deleteMode->
                         var size = selectedDeleteItems.value!!.size
                         if (!deleteMode) return@let
-                        it.historyList.asSequence()
+                        it!!.historyList.asSequence()
                             .map {
                                 if (selectedDeleteItems.value!!.contains(it.id)){
                                     size--
@@ -178,7 +175,7 @@ class HistoryFragment :
                             .toList()
                     }
                 }
-                historyAdapter.submitList(it.historyList)
+                historyAdapter.submitList(it!!.historyList)
             }
             curAppbarTitle.observe(viewLifecycleOwner) {
                 if (isDeleteMode.value!!) return@observe
