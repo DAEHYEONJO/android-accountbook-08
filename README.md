@@ -1,7 +1,7 @@
 # android-accountbook-08
 조대현의 가계부.^^~ 부자될래요~
 
-## 데모 및 PT 영상 👉 [시청해주세요!](https://youtu.be/ilgce70zScA)
+# 데모 및 PT 영상 👉 [시청해주세요!](https://youtu.be/ilgce70zScA)
 
 # 수입, 지출 Toggle 버튼 상태에 따른 상태 관리법
 스크린샷 | 설명 | bit 값
