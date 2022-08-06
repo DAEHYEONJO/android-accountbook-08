@@ -1,25 +1,21 @@
 package com.example.accountbook.presentation.viewmodel
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.accountbook.R
-import com.example.accountbook.domain.model.CalendarItem
 import com.example.accountbook.domain.model.HistoriesTotalData
 import com.example.accountbook.domain.repository.AccountRepository
-import com.example.accountbook.domain.usecase.CalendarItemListUseCase
+import com.example.accountbook.domain.usecase.GetHistoriesTotalDataUseCase
 import com.example.accountbook.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.HashSet
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository: AccountRepository
+    private val repository: AccountRepository,
+    private val getHistoriesTotalDataUseCase: GetHistoriesTotalDataUseCase
 ) : ViewModel() {
 
     companion object {
@@ -32,15 +28,11 @@ class MainViewModel @Inject constructor(
 
     val curSelectedMenuItemId = MutableLiveData(R.id.bottom_nav_item_history)
 
-    private val _historiesTotalData = MutableLiveData<HistoriesTotalData>()
-    val historiesTotalData: LiveData<HistoriesTotalData> get() = _historiesTotalData
+    private val _historiesTotalData = MutableLiveData<HistoriesTotalData?>()
+    val historiesTotalData: LiveData<HistoriesTotalData?> get() = _historiesTotalData
     fun getHistoriesTotalData(isExpense: Int) = viewModelScope.launch {
-//        val (start, end) = getStartEndOfCurMonth(
-//            curAppbarYear.value!!,
-//            curAppbarMonth.value!!
-//        )
-        val(start, end) = getStartEndLongValue()
-        _historiesTotalData.value = repository.getHistoriesTotalData(
+        val (start, end) = getStartEndLongValue()
+        _historiesTotalData.value = getHistoriesTotalDataUseCase(
             isExpense = isExpense,
             start = start,
             end = end
@@ -63,27 +55,33 @@ class MainViewModel @Inject constructor(
     val curAppbarMonth = MutableLiveData<Int>()
     val curMonthIncome = MutableLiveData<Long>()
     val curMonthExpense = MutableLiveData<Long>()
-    val curTotalPrice = combine(curMonthIncome.asFlow(), curMonthExpense.asFlow()){ income, expense ->
-        -1*expense + income
-    }.asLiveData()
+    val curTotalPrice =
+        combine(curMonthIncome.asFlow(), curMonthExpense.asFlow()) { income, expense ->
+            -1 * expense + income
+        }.asLiveData()
     val curAppbarTitle = MutableLiveData<String>()
     fun setTitle(year: Int, month: Int) {
         curAppbarTitle.value = "${year}년 ${month}월"
     }
 
     val isExpenseLiveData =
-        combine(historyIncomeChecked.asFlow(), historyExpenseChecked.asFlow()) { income, expense ->
+        combine(
+            historyIncomeChecked.asFlow(),
+            historyExpenseChecked.asFlow()
+        )
+        { income, expense ->
             val incomeBit = income.toInt()
             val expenseBit = expense.toInt()
             (incomeBit shl 1) or expenseBit
         }.asLiveData()
+
 
     fun setTotalPrice() {
 //        val (start, end) = getStartEndOfCurMonth(
 //            curAppbarYear.value!!,
 //            curAppbarMonth.value!!
 //        )
-        val(start, end) = getStartEndLongValue()
+        val (start, end) = getStartEndLongValue()
         with(viewModelScope) {
             launch {
                 curMonthIncome.value = repository.getSumPrice(0, start, end)
@@ -96,19 +94,22 @@ class MainViewModel @Inject constructor(
 
     val isDeleteMode = MutableLiveData<Boolean>(false)
     val selectedDeleteItems = MutableLiveData<HashSet<Int>>(HashSet())
-    fun setDeleteModeTitle(size: Int = selectedDeleteItems.value!!.size){
+    fun setDeleteModeTitle(size: Int = selectedDeleteItems.value!!.size) {
         curAppbarTitle.value = "${size}개 선택"
     }
-    fun setDeleteModeProperties(id: Int){
+
+    fun setDeleteModeProperties(id: Int) {
         isDeleteMode.value = true // delete mode 전환
         selectedDeleteItems.value!!.add(id) // 첫 아이템 넣기
         setDeleteModeTitle()
     }
-    fun resetDeleteModeProperties(){
+
+    fun resetDeleteModeProperties() {
         isDeleteMode.value = false
         selectedDeleteItems.value!!.clear()
         setTitle(curAppbarYear.value!!, curAppbarMonth.value!!)
     }
+
     fun deleteHistories() = viewModelScope.launch {
         selectedDeleteItems.value?.let {
             it.forEach { id ->
@@ -118,6 +119,7 @@ class MainViewModel @Inject constructor(
         getHistoriesTotalData(isExpenseLiveData.value!!)
         resetDeleteModeProperties()
     }
+
     fun getStartEndLongValue(): List<Long> {
         return getStartEndOfCurMonth(
             curAppbarYear.value!!,
@@ -131,7 +133,6 @@ class MainViewModel @Inject constructor(
         curAppbarYear.value = year
         curAppbarMonth.value = month
         setTitle(year, month)
-        Log.e(TAG, "MainViewModel Init: ", )
     }
 
     fun onClickNextMonthBtn() {

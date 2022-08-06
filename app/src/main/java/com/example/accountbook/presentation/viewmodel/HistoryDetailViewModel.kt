@@ -1,11 +1,12 @@
 package com.example.accountbook.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
 import com.example.accountbook.domain.model.HistoriesListItem
 import com.example.accountbook.domain.repository.AccountRepository
+import com.example.accountbook.domain.usecase.GetSpinnerCategoryListUseCase
+import com.example.accountbook.domain.usecase.GetSpinnerPaymentListUseCase
 import com.example.accountbook.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
@@ -15,7 +16,9 @@ import kotlin.collections.ArrayList
 
 @HiltViewModel
 class HistoryDetailViewModel @Inject constructor(
-    private val repository: AccountRepository // use case 로 분리 고민 예정
+    private val repository: AccountRepository,
+    private val getSpinnerPaymentListUseCase: GetSpinnerPaymentListUseCase,
+    private val getSpinnerCategoryListUseCase: GetSpinnerCategoryListUseCase
 ) : ViewModel() {
 
     companion object {
@@ -28,40 +31,27 @@ class HistoryDetailViewModel @Inject constructor(
         setCategoryList()
     }
 
-    private val _spinnerPaymentsList = MutableLiveData<ArrayList<Payments>>()
-    val spinnerPaymentsList: LiveData<ArrayList<Payments>> get() = _spinnerPaymentsList
+    private val _spinnerPaymentsList = MutableLiveData<ArrayList<Payments>?>()
+    val spinnerPaymentsList: MutableLiveData<ArrayList<Payments>?> get() = _spinnerPaymentsList
     private fun setPaymentsList() = viewModelScope.launch {
         // useCase 로 분리 고민 예정
-        _spinnerPaymentsList.value = ArrayList<Payments>().apply {
-            add(Payments(payment = "선택하세요"))
-            addAll(repository.getAllPayments())
-            add(Payments(payment = "추가하기"))
-        }
+        _spinnerPaymentsList.value = getSpinnerPaymentListUseCase()
     }
 
-    private val _spinnerIncomeCategoryList = MutableLiveData<ArrayList<Categories>>()
-    val spinnerIncomeCategoryList: LiveData<ArrayList<Categories>> get() = _spinnerIncomeCategoryList
-    private val _spinnerExpenseCategoryList = MutableLiveData<ArrayList<Categories>>()
-    val spinnerExpenseCategoryList: LiveData<ArrayList<Categories>> get() = _spinnerExpenseCategoryList
+    private val _spinnerIncomeCategoryList = MutableLiveData<ArrayList<Categories>?>()
+    val spinnerIncomeCategoryList: LiveData<ArrayList<Categories>?> get() = _spinnerIncomeCategoryList
+    private val _spinnerExpenseCategoryList = MutableLiveData<ArrayList<Categories>?>()
+    val spinnerExpenseCategoryList: LiveData<ArrayList<Categories>?> get() = _spinnerExpenseCategoryList
     fun fetchData(){
         setCategoryList()
         setPaymentsList()
     }
     private fun setCategoryList() {
         viewModelScope.launch {
-            // useCase 로 분리 고민 예정
-            _spinnerExpenseCategoryList.value = ArrayList<Categories>().apply {
-                add(Categories(category = "선택하세요"))
-                addAll(repository.getAllCategories(isExpense = 1))
-                add(Categories(category = "추가하기"))
-            }
+            _spinnerExpenseCategoryList.value = getSpinnerCategoryListUseCase(1)
         }
         viewModelScope.launch {
-            _spinnerIncomeCategoryList.value = ArrayList<Categories>().apply {
-                add(Categories(category = "선택하세요"))
-                addAll(repository.getAllCategories(isExpense = 0))
-                add(Categories(category = "추가하기"))
-            }
+            _spinnerIncomeCategoryList.value = getSpinnerCategoryListUseCase(0)
         }
     }
 
@@ -87,7 +77,6 @@ class HistoryDetailViewModel @Inject constructor(
         isPaymentEntered.asFlow(),
         isCategoryEntered.asFlow(),
     ) { priceFlag, paymentFlag, categoryFlag ->
-        Log.d(TAG, ": $priceFlag $paymentFlag $categoryFlag")
         if (isExpenseChecked.value == false) { // 수입인 경우
             priceFlag and categoryFlag
         } else {

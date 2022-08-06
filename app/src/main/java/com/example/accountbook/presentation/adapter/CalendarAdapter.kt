@@ -1,22 +1,17 @@
 package com.example.accountbook.presentation.adapter
 
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.accountbook.R
 import com.example.accountbook.databinding.CalendarItemBinding
 import com.example.accountbook.domain.model.CalendarItem
 import com.example.accountbook.utils.getCommaPriceString
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @Singleton
 class CalendarAdapter @Inject constructor() :

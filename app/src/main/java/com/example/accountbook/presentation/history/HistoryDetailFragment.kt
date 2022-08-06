@@ -1,7 +1,6 @@
 package com.example.accountbook.presentation.history
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
@@ -13,7 +12,7 @@ import com.example.accountbook.R
 import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
 import com.example.accountbook.databinding.FragmentHistoryDetailBinding
-import com.example.accountbook.presentation.CustomSpinner
+import com.example.accountbook.presentation.ui.CustomSpinner
 import com.example.accountbook.presentation.adapter.CategorySpinnerAdapter
 import com.example.accountbook.presentation.adapter.PaymentSpinnerAdapter
 import com.example.accountbook.presentation.base.BaseFragment
@@ -24,7 +23,6 @@ import com.example.accountbook.presentation.viewmodel.MainViewModel
 import com.example.accountbook.presentation.viewmodel.SettingViewModel
 import com.example.accountbook.utils.dpToPx
 import com.example.accountbook.utils.getCommaPriceString
-import com.example.accountbook.utils.toInt
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -61,7 +59,7 @@ class HistoryDetailFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initBottomSheet()
-        initRadioGroup()
+        initDataBinding()
         fetchList()
         initPaymentSpinner()
         initCategorySpinner()
@@ -82,12 +80,10 @@ class HistoryDetailFragment
         }
     }
 
-    private fun initRadioGroup() {
+    private fun initDataBinding() {
         with(binding) {
             this.mvm = mainViewModel
             this.viewModel = historyDetailViewModel
-            if (historyDetailViewModel.isUpdateMode.value == true) return@with
-            historyDetailViewModel.isExpenseChecked.value = mainViewModel.isExpenseLiveData.value!! == 1
         }
     }
 
@@ -98,18 +94,18 @@ class HistoryDetailFragment
     private fun initObserver() {
         with(historyDetailViewModel) {
             spinnerPaymentsList.observe(viewLifecycleOwner) {
-                paymentSpinnerAdapter.paymentList = it
+                paymentSpinnerAdapter.paymentList = it!!
                 paymentSpinnerAdapter.notifyDataSetChanged()
             }
             spinnerExpenseCategoryList.observe(viewLifecycleOwner) {
                 if (isExpenseChecked.value!!){
-                    categorySpinnerAdapter.categoryList = it
+                    categorySpinnerAdapter.categoryList = it!!
                     categorySpinnerAdapter.notifyDataSetChanged()
                 }
             }
             spinnerIncomeCategoryList.observe(viewLifecycleOwner) {
                 if (!isExpenseChecked.value!!) {
-                    categorySpinnerAdapter.categoryList = it
+                    categorySpinnerAdapter.categoryList = it!!
                     categorySpinnerAdapter.notifyDataSetChanged()
                 }
             }
@@ -141,10 +137,6 @@ class HistoryDetailFragment
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     private fun initPaymentSpinner() {
         with(binding.historyDetailPaymentSpinner) {
             setSpinnerEventsListener(spinnerEventsListener)
@@ -159,7 +151,6 @@ class HistoryDetailFragment
                     id: Long
                 ) {
                     with(historyDetailViewModel) {
-                        Log.e(TAG, "onItemSelected: payment spinner: $position ${p0!!.selectedItem as Payments}")
                         if (position == paymentSpinnerAdapter.paymentList.size-1){
                             fragmentTransaction()
                             addPaymentState.value = true
@@ -169,7 +160,7 @@ class HistoryDetailFragment
                                     name = "",
                                     updateMode = false,
                                     paymentMode = true,
-                                    expenseMode= false,
+                                    expenseMode= true,
                                 )
                             }
                         }else{
@@ -234,7 +225,6 @@ class HistoryDetailFragment
                                 categoryFromExpense.value = historyDetailViewModel.isExpenseChecked.value!!
                             }
                         }else{
-                            Log.e(TAG, "onItemSelected: category spinner: $position ${p0!!.selectedItem as Categories}", )
                             setSpinnerSelectedPos(position, p0!!.selectedItem as Categories)
                             historyDetailViewModel.isCategoryEntered.value =
                                 position != 0 && position != categorySpinnerAdapter.categoryList.size - 1
@@ -243,7 +233,7 @@ class HistoryDetailFragment
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
-                    Log.d(TAG, "category onNothingSelected: $p0")
+
                 }
             }
         }
@@ -308,8 +298,8 @@ class HistoryDetailFragment
             )
             appBarRightIv.visibility = View.INVISIBLE
             appBarBackIv.setOnClickListener {
-                historyDetailViewModel.resetMemberProperties()
                 parentFragmentManager.popBackStack()
+                historyDetailViewModel.resetMemberProperties()
             }
         }
     }

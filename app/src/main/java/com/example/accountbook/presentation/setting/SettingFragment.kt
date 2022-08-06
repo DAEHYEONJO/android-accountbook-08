@@ -6,12 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,20 +21,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalOf
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
-import androidx.core.view.WindowCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
@@ -44,11 +37,9 @@ import com.example.accountbook.R
 import com.example.accountbook.data.model.Categories
 import com.example.accountbook.data.model.Payments
 import com.example.accountbook.databinding.FragmentSettingBinding
-import com.example.accountbook.presentation.history.HistoryDetailFragment
 import com.example.accountbook.presentation.viewmodel.SettingViewModel
 import com.example.accountbook.ui.theme.*
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
 class SettingFragment : Fragment() {
@@ -243,7 +234,7 @@ class SettingFragment : Fragment() {
         }
     }
 
-    fun pxToDp(px: Int): Float{
+    fun pxToDp(px: Int): Float {
         val resources = requireContext().resources
         val metrics = resources.displayMetrics
         return px / (metrics.densityDpi / 160f)
@@ -257,22 +248,24 @@ class SettingFragment : Fragment() {
         val expenseCategoryList by settingViewModel.expenseCategoryItemList.observeAsState(emptyList())
         val incomeCategoryList by settingViewModel.incomeCategoryItemList.observeAsState(emptyList())
         val paymentList by settingViewModel.paymentItemList.observeAsState(emptyList())
-        Log.e(TAG, "MainContents: $expenseCategoryList")
-        Log.e(TAG, "MainContents: $incomeCategoryList")
-        Log.e(TAG, "MainContents: $scrollState", )
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize(1f)
+                .fillMaxSize()
                 .background(PrimaryOffWhite),
-            contentPadding = PaddingValues(bottom = pxToDp(settingViewModel.bottomNavigationHeight).dp)
+            contentPadding = PaddingValues(
+                bottom = pxToDp(
+                    settingViewModel.bottomNavigationHeight
+                ).dp
+            )
         ) {
             stickyHeader {
                 ColumnItem(
                     Modifier
                         .fillMaxWidth()
                         .padding(16.dp, 24.dp, 16.dp)
-                        .background(PrimaryOffWhite).animateItemPlacement(),
+                        .background(PrimaryOffWhite)
+                        .animateItemPlacement(),
                     16.sp,
                     R.font.ko_pub_world_dobum_pro_medium_500,
                     PrimaryLightPurple,
@@ -280,7 +273,7 @@ class SettingFragment : Fragment() {
                     "결제수단"
                 )
             }
-            itemsIndexed(paymentList!!){index: Int, item: Payments ->
+            itemsIndexed(paymentList!!) { _: Int, item: Payments ->
                 ColumnItem(
                     Modifier
                         .fillMaxWidth()
@@ -299,7 +292,8 @@ class SettingFragment : Fragment() {
                                 expenseMode = false,
                                 paymentId = item.paymentId
                             )
-                        }.animateItemPlacement(),
+                        }
+                        .animateItemPlacement(),
                     14.sp,
                     R.font.ko_pub_world_dobum_pro_bold_700,
                     PrimaryPurple,
@@ -333,7 +327,7 @@ class SettingFragment : Fragment() {
                     "지출 카테고리"
                 )
             }
-            itemsIndexed(expenseCategoryList!!){index: Int, item: Categories ->
+            itemsIndexed(expenseCategoryList!!) { _: Int, item: Categories ->
                 CategoryBodyItem(item.category, item.labelColor) {
                     fragmentTransaction()
                     settingViewModel.setProperties(
@@ -374,7 +368,7 @@ class SettingFragment : Fragment() {
                 )
 
             }
-            itemsIndexed(incomeCategoryList!!){index: Int, item: Categories ->
+            itemsIndexed(incomeCategoryList!!) { _: Int, item: Categories ->
                 CategoryBodyItem(item.category, item.labelColor) {
                     fragmentTransaction()
                     settingViewModel.setProperties(
@@ -400,7 +394,6 @@ class SettingFragment : Fragment() {
                     )
                 }
             }
-
 
         }
     }
