@@ -11,7 +11,7 @@ class GetSpinnerCategoryListUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(isExpense: Int) = ArrayList<Categories>().apply {
         add(Categories(category = "선택하세요"))
-        addAll(repository.getAllCategories(isExpense = 1))
+        addAll(repository.getAllCategories(isExpense = isExpense))
         add(Categories(category = "추가하기"))
     }
 
