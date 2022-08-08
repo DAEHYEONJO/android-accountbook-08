@@ -1,6 +1,7 @@
 package com.example.accountbook.presentation.history
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
@@ -98,12 +99,14 @@ class HistoryDetailFragment
                 paymentSpinnerAdapter.notifyDataSetChanged()
             }
             spinnerExpenseCategoryList.observe(viewLifecycleOwner) {
+                Log.e(TAG, "initObserver: $it", )
                 if (isExpenseChecked.value!!){
                     categorySpinnerAdapter.categoryList = it!!
                     categorySpinnerAdapter.notifyDataSetChanged()
                 }
             }
             spinnerIncomeCategoryList.observe(viewLifecycleOwner) {
+                Log.e(TAG, "initObserver: $it", )
                 if (!isExpenseChecked.value!!) {
                     categorySpinnerAdapter.categoryList = it!!
                     categorySpinnerAdapter.notifyDataSetChanged()

@@ -12,7 +12,7 @@ class CustomSpinner : AppCompatSpinner {
     }
 
     private var onSpinnerEventsListener: OnSpinnerEventsListener? = null
-    private var openInitiated = false
+
 
     constructor(context: Context?) : super(context!!)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -28,6 +28,7 @@ class CustomSpinner : AppCompatSpinner {
         this.onSpinnerEventsListener = onSpinnerEventsListener
     }
 
+    private var openInitiated = false
     override fun performClick(): Boolean {
         openInitiated = true
         onSpinnerEventsListener?.onPopupWindowOpened(this)
